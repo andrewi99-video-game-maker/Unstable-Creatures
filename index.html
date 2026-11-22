@@ -14128,38 +14128,34 @@ var WK = {
 	vortex: 2,
 	cane: 3,
 	hook: 4,
-	hammer: 5,
 	bomb: 6,
 	banana: 7,
 	hole: 8,
-	ice: 9
+	sniper: 10
 };
 var KW = {
 	1: "shark",
 	2: "vortex",
 	3: "cane",
 	4: "hook",
-	5: "hammer",
 	6: "bomb",
 	7: "banana",
 	8: "hole",
-	9: "ice"
+	10: "sniper"
 };
 var WN = {
 	shark: "Shark Gun",
 	vortex: "Vortex Cannon",
 	cane: "Candy Cane",
 	hook: "Grappling Hook",
-	hammer: "Big Hammer",
 	bomb: "Bomb",
 	banana: "Banana Peel",
 	hole: "Black Hole Blaster",
-	ice: "Ice Machine"
+	sniper: "Sniper Rifle"
 };
 var WI = {
 	hole: "⚫",
-	ice: "🧊",
-	hammer: "🔨",
+	sniper: "🎯",
 	bomb: "💣",
 	banana: "🍌",
 	hook: "🪝",
@@ -14174,18 +14170,17 @@ var WCD = {
 	bomb: 1200,
 	banana: 900,
 	hole: 250,
-	ice: 80
+	sniper: 1500
 };
 var WAM = {
 	shark: 5,
 	vortex: 6,
 	cane: 0,
 	hook: 3,
-	hammer: 0,
 	bomb: 3,
 	banana: 3,
 	hole: 1,
-	ice: 70
+	sniper: 3
 };
 var ATK = {
 	l: [16, 8.5],
@@ -14401,7 +14396,8 @@ var MODE_LABELS = {
 	ffa: "Free-for-All",
 	team: "Team Battle",
 	ctf: "Capture the Flag",
-	koth: "Capture Zone"
+	koth: "Capture Zone",
+	kothteam: "Team Capture Zone"
 };
 var PAD_BIND_LABELS = {
 	a: "A",
@@ -52092,6 +52088,40 @@ function getContactTex() {
 	if (!contactTex) contactTex = createContactShadowTexture();
 	return contactTex;
 }
+function makeBananaGroup(sc = 1) {
+	const root = new Group();
+	const g = new Group();
+	g.position.y = .5;
+	root.add(g);
+	const yel = new MeshStandardMaterial({ color: "#ffd514", roughness: .38, emissive: "#6b4e00", emissiveIntensity: .35, flatShading: true });
+	const dark = new MeshStandardMaterial({ color: "#3b2410", roughness: .8 });
+	const stemM = new MeshStandardMaterial({ color: "#6f7d1c", roughness: .7 });
+	const N = 9, R = .62, span = 1.9;
+	const rad = (i) => .04 + .13 * Math.pow(Math.sin(Math.PI * i / N), .6);
+	const pt = (a) => [Math.sin(a) * R, -Math.cos(a) * R];
+	for (let i = 0; i < N; i++) {
+		const a0 = -span / 2 + span * i / N, a1 = -span / 2 + span * (i + 1) / N, am = (a0 + a1) / 2;
+		const [x0, y0] = pt(a0), [x1, y1] = pt(a1);
+		const seg = new Mesh(new CylinderGeometry(rad(i + 1), rad(i), Math.hypot(x1 - x0, y1 - y0) * 1.04, 6), yel);
+		seg.position.set((x0 + x1) / 2, (y0 + y1) / 2, 0);
+		seg.rotation.z = am - Math.PI / 2;
+		seg.castShadow = true;
+		g.add(seg);
+	}
+	const a1 = span / 2, [ex, ey] = pt(a1), [sx, sy] = pt(-span / 2);
+	const stem = new Mesh(new CylinderGeometry(.04, .06, .22, 6), stemM);
+	stem.position.set(ex + Math.cos(a1) * .1, ey + Math.sin(a1) * .1, 0);
+	stem.rotation.z = a1 - Math.PI / 2;
+	g.add(stem);
+	const cap = new Mesh(new SphereGeometry(.06, 8, 6), dark);
+	cap.position.set(ex + Math.cos(a1) * .22, ey + Math.sin(a1) * .22, 0);
+	g.add(cap);
+	const tip = new Mesh(new SphereGeometry(.055, 8, 6), dark);
+	tip.position.set(sx - Math.cos(a1) * .03, sy + Math.sin(a1) * .03, 0);
+	g.add(tip);
+	root.scale.setScalar(sc);
+	return root;
+}
 function wpModel(k) {
 	const g = new Group();
 	const M = (c, r = .36, m = .24, e) => new MeshStandardMaterial({
@@ -52147,8 +52177,19 @@ function wpModel(k) {
 		add(new SphereGeometry(.19, 14, 12), M("#38bdf8", .15, .2, "#0284c7"), 0, 0, 0);
 		add(new ConeGeometry(.22, .32, 12), M("#f0f9ff", .2, .1), 0, -.62, 0).rotation.x = Math.PI;
 		add(new CylinderGeometry(.05, .05, .3, 8), M("#0369a1", .3, .4), 0, -.05, -.2, false);
-	} else if (k === "banana") add(new TorusGeometry(.3, .09, 10, 16, Math.PI * 1.1), M("#facc15", .45, .05), 0, -.45, 0).rotation.set(0, Math.PI / 2, 0);
-	else {
+	} else if (k === "banana") {
+		const bg = makeBananaGroup(.7);
+		bg.position.set(0, -.5, 0);
+		bg.rotation.set(0, Math.PI / 2, 0);
+		g.add(bg);
+	} else if (k === "sniper") {
+		add(new CylinderGeometry(.045, .05, 1.25, 10), M("#1f2937", .3, .6), 0, -.8, 0);
+		add(new CylinderGeometry(.065, .065, .14, 10), M("#0f172a", .3, .6), 0, -1.45, 0, false);
+		add(new CylinderGeometry(.08, .08, .7, 10), M("#374151", .35, .5), 0, -.2, 0);
+		add(new BoxGeometry(.1, .45, .14), M("#7c4a1e", .6, .05), 0, .3, 0);
+		add(new CylinderGeometry(.06, .06, .42, 10), M("#111827", .3, .6), 0, -.42, .12);
+		add(new SphereGeometry(.052, 8, 6), M("#22d3ee", .1, .3, "#06b6d4"), 0, -.63, .12, false);
+	} else {
 		add(new CylinderGeometry(.05, .05, 1.3, 12), M("#ffffff", .25, .05), 0, -.7, 0);
 		for (let i = 0; i < 6; i++) add(new CylinderGeometry(.058, .058, .1, 12), M("#ef4444", .25, .05), 0, -.2 - i * .2, 0, false);
 		add(new TorusGeometry(.2, .05, 10, 16, Math.PI), M("#ffffff", .25, .05), 0, -1.35, .2).rotation.set(0, Math.PI / 2, Math.PI);
@@ -54503,7 +54544,7 @@ function buildWorlds(scene) {
 		light(g, 23, 5, 0, "#3b82f6", 1.8, 30);
 		addAmbientParticles(g, "#93c5fd", 70, 24, .5, 8, .5, .22);
 		MC[g] = [[-8, -6], [8, 6], [-8, 6], [8, -6], [-15, 0], [15, 0], [0, -9], [0, 9]];
-		PKS[g] = [["vortex", 0, 0], ["shark", -12, 12.25], ["cane", 12, -12.25], ["hook", 0, 8], ["hammer", -14, -8], ["bomb", 14, 8]];
+		PKS[g] = [["vortex", 0, 0], ["shark", -12, 12.25], ["cane", 12, -12.25], ["hook", 0, 8], ["sniper", -14, -8], ["bomb", 14, 8]];
 		SPW[g] = [[-21, 3.5], [-23, 0], [-21, -3.5], [-19, 0], [-20, 8], [21, 3.5], [23, 0], [21, -3.5], [19, 0], [20, -8]];
 	}
 	{
@@ -54519,7 +54560,7 @@ function buildWorlds(scene) {
 		light(g, -12, 4, -12, "#fb923c", 1.1, 26);
 		addAmbientParticles(g, "#fde68a", 70, 22, .5, 8, .5, .22);
 		MC[g] = [[-11, 0], [11, 0], [0, -11], [0, 11], [-9, 9], [9, -9], [-9, -9], [9, 9]];
-		PKS[g] = [["vortex", -10, 6], ["shark", 10, -6], ["cane", 6, 10], ["hammer", -6, -10], ["bomb", 0, 5.5]];
+		PKS[g] = [["vortex", -10, 6], ["shark", 10, -6], ["cane", 6, 10], ["sniper", -6, -10], ["bomb", 0, 5.5]];
 		SPW[g] = Array.from({ length: 8 }, (_, i) => [Math.round(Math.sin(i * Math.PI / 4) * 13.5 * 2) / 2, Math.round(Math.cos(i * Math.PI / 4) * 13.5 * 2) / 2]);
 	}
 	const se = (H, p) => (x, z) => Math.pow(Math.abs(x) / H, p) + Math.pow(Math.abs(z) / H, p) <= 1;
@@ -54777,11 +54818,10 @@ function buildWorlds(scene) {
 			]);
 		}
 		[
-			["hammer", 2],
+			["sniper", 2],
 			["bomb", 7],
 			["banana", 10],
-			["hole", 5],
-			["ice", 9]
+			["hole", 5]
 		].forEach(([k, i]) => {
 			const s = SPW[g][i % SPW[g].length];
 			PKS[g].push([
@@ -96477,25 +96517,31 @@ var ICE_SERVERS = [
 	{ urls: "stun:stun.l.google.com:19302" },
 	{ urls: "stun:stun1.l.google.com:19302" },
 	{ urls: "stun:stun2.l.google.com:19302" },
+	{ urls: "stun:stun.cloudflare.com:3478" },
 	{ urls: "stun:global.stun.twilio.com:3478" },
 	{
 		urls: ["turn:eu-0.turn.peerjs.com:3478", "turn:us-0.turn.peerjs.com:3478"],
 		username: "peerjs",
 		credential: "peerjsp"
-	},
-	{
-		urls: [
-			"turn:openrelay.metered.ca:80",
-			"turn:openrelay.metered.ca:443",
-			"turn:openrelay.metered.ca:443?transport=tcp"
-		],
-		username: "openrelayproject",
-		credential: "openrelayproject"
 	}
 ];
+function customPeerServer() {
+	try {
+		let v = new URLSearchParams(location.search).get("peerserver") || localStorage.getItem("uc_peerserver") || "";
+		v = v.trim().replace(/^(wss?|https?):\/\//i, "");
+		if (!v) return null;
+		const m = v.match(/^([^:\/]+)(?::(\d+))?(\/.*)?$/);
+		if (!m) return null;
+		const local = /^(localhost|127\.|192\.168\.|10\.)/.test(m[1]);
+		return { host: m[1], port: m[2] ? +m[2] : local ? 9000 : 443, path: m[3] || "/", secure: !local };
+	} catch {
+		return null;
+	}
+}
 function createPeerInstance(id) {
 	const opts = {
 		debug: 0,
+		...customPeerServer() || {},
 		config: {
 			iceServers: ICE_SERVERS,
 			sdpSemantics: "unified-plan",
@@ -97418,7 +97464,7 @@ var WeaponSystem = class {
 		});
 	}
 	spawnBanana(x, y, z, own, now) {
-		if (this.bananas.length >= 10) return;
+		if (this.bananas.length >= 14) return;
 		this.bananas.push({
 			id: this.bombId++,
 			x,
@@ -97774,10 +97820,10 @@ var WeaponSystem = class {
 		}
 		for (let i = this.bananas.length - 1; i >= 0; i--) {
 			const b = this.bananas[i];
-			let gone = now - b.born > 3e4;
+			let gone = now - b.born > 6e4;
 			if (!gone) for (const q of players) {
 				if (!q.alive || q.ko > now || q.heldBy || q.id === b.own && now - b.born < 1200) continue;
-				if (Math.hypot(q.tx - b.x, q.tz - b.z) < .95 && Math.abs(q.ty - b.y) < 1) {
+				if (Math.hypot(q.tx - b.x, q.tz - b.z) < 1.25 && Math.abs(q.ty - b.y) < 1.2) {
 					const sp = Math.hypot(q.mvx || 0, q.mvz || 0);
 					let ux;
 					let uz;
@@ -97789,7 +97835,7 @@ var WeaponSystem = class {
 						ux = Math.cos(a);
 						uz = Math.sin(a);
 					}
-					cb.onSlip(q.id, b.own, ux * 14, uz * 14, b.x, b.y, b.z);
+					cb.onSlip(q.id, b.own, ux * 24, uz * 24, b.x, b.y, b.z);
 					gone = true;
 					break;
 				}
@@ -97860,13 +97906,12 @@ var WeaponSystem = class {
 		for (const [id, x, y, z] of list) {
 			seen.add(id);
 			if (!this.bananaM.has(id)) {
-				const m = new Mesh(new TorusGeometry(.35, .11, 8, 14, Math.PI * 1.1), new MeshStandardMaterial({
-					color: "#facc15",
-					roughness: .45
-				}));
-				m.rotation.x = -Math.PI / 2;
-				m.castShadow = true;
-				m.position.set(x, y + .2, z);
+				const m = new Group();
+				const bgm = makeBananaGroup(1.15);
+				bgm.rotation.x = Math.PI / 2;
+				m.add(bgm);
+				m.rotation.y = id * 1.7;
+				m.position.set(x, y + .17, z);
 				this.scene.add(m);
 				this.bananaM.set(id, m);
 			}
@@ -98142,6 +98187,7 @@ var newMe = () => ({
 	sharkHold: null
 });
 var randCode = () => [...Array(2)].map(() => CODE_ALPHA[Math.random() * 24 | 0]).join("");
+var NET_RETRY = { network: 1, "server-error": 1, "socket-error": 1, "socket-closed": 1 };
 var netErr = (e) => {
 	const t = e && e.type;
 	return t === "peer-unavailable" ? "No such party (check the code)" : t === "unavailable-id" ? "That party code is already taken — try again" : t === "network" || t === "server-error" || t === "socket-error" || t === "socket-closed" ? "Cannot reach the matchmaking server. Check your internet connection." : t === "browser-incompatible" ? "This browser does not support online play" : "Network error" + (t ? ": " + t : "");
@@ -98198,6 +98244,7 @@ var GameEngine = class GameEngine {
 		this.netOn = false;
 		this.starting = false;
 		this.localMode = false;
+		this.cz = { open: false, row: 0, k: 0 };
 		this.diff = 1;
 		this.myPT = -1;
 		this.flags = [];
@@ -98289,6 +98336,19 @@ var GameEngine = class GameEngine {
 			const k = e.key.toLowerCase();
 			sound.unlock();
 			if (e.target?.tagName === "INPUT") return;
+			if (this.cz.open && this.canCustomize()) {
+				if (["arrowup", "arrowdown", "arrowleft", "arrowright", "enter", "escape", "v", " "].includes(k)) e.preventDefault();
+				if (k === "arrowup") this.czMove(-1);
+				else if (k === "arrowdown") this.czMove(1);
+				else if (k === "arrowleft") this.czChange(this.cz.row, -1);
+				else if (k === "arrowright") this.czChange(this.cz.row, 1);
+				else if (k === "enter" || k === "escape" || k === "v") this.closeCz();
+				return;
+			}
+			if (k === "v" && this.canCustomize() && !this.pauseOpen) {
+				this.openCz();
+				return;
+			}
 			if (!this.joined && !this.LM.on) {
 				if (this.menuSubModal !== "none") {
 					if (k === "escape") this.openSubModal("none");
@@ -98606,6 +98666,7 @@ var GameEngine = class GameEngine {
 			screen: !this.joined ? this.LM.on ? "local" : "menu" : "game",
 			phase: this.phase,
 			mode: this.mode,
+			zt: this.zt,
 			code: this.code,
 			isHost: this.isHost,
 			netOn: this.netOn,
@@ -98649,6 +98710,14 @@ var GameEngine = class GameEngine {
 			loadingSub: this.loadingSub,
 			myId: this.myId,
 			myTeamPref: this.myPT,
+			netOn: this.netOn,
+			czOpen: this.cz.open && this.canCustomize(),
+			czRow: this.cz.row,
+			czK: this.cz.k,
+			czList: this.locals.map((L) => {
+				const p = this.P[L.id];
+				return p ? { head: p.head, hat: p.hat, face: p.face, back: p.back, color: p.color, pants: p.pants, team: p.pt === 0 || p.pt === 1 ? p.pt : -1 } : null;
+			}),
 			muted: sound.muted,
 			micOK: sound.micOK,
 			panes,
@@ -98768,12 +98837,18 @@ var GameEngine = class GameEngine {
 		this.loadingLabel = label;
 		this.loadingSub = sub;
 		this.notify();
-		this.loadingTimer = setTimeout(() => {
-			this.loadingTimer = null;
-			this.loadingLabel = null;
-			this.loadingSub = null;
-			if (!this.disposed) this.notify();
-		}, ms);
+		const t0 = Date.now(), f0 = this.frameCt || 0;
+		const chk = () => {
+			if (this.disposed) return;
+			const ready = (this.frameCt || 0) - f0 >= 30 && Date.now() - t0 >= Math.max(ms, 900);
+			if (ready || Date.now() - t0 > 9000) {
+				this.loadingTimer = null;
+				this.loadingLabel = null;
+				this.loadingSub = null;
+				this.notify();
+			} else this.loadingTimer = setTimeout(chk, 120);
+		};
+		this.loadingTimer = setTimeout(chk, 120);
 	}
 	setBinding(mode, action, key) {
 		if (mode === "kb") this.bindings.kb[action] = key.toLowerCase();
@@ -98925,7 +99000,8 @@ var GameEngine = class GameEngine {
 			"ffa",
 			"team",
 			"ctf",
-			"koth"
+			"koth",
+			"kothteam"
 		];
 		this.LM.mode = modes[(modes.indexOf(this.LM.mode) + 1) % modes.length];
 		sound.uiClick(600);
@@ -98998,6 +99074,113 @@ var GameEngine = class GameEngine {
 		this.ctx(this.MAIN);
 		if (document.pointerLockElement === this.R.domElement) document.exitPointerLock?.();
 		this.notify();
+	}
+	canCustomize() {
+		return this.joined && !this.LM.on && this.phase === "lobby" && this.locals.length > 0;
+	}
+	openCz() {
+		if (!this.canCustomize()) return;
+		this.cz.open = true;
+		this.cz.row = 0;
+		this.cz.k = Math.min(this.cz.k, this.locals.length - 1);
+		if (document.pointerLockElement === this.R.domElement) document.exitPointerLock?.();
+		sound.uiClick(540);
+		this.notify();
+	}
+	closeCz() {
+		this.cz.open = false;
+		sound.uiClick(420);
+		this.notify();
+	}
+	czPick(k) {
+		if (k >= 0 && k < this.locals.length) {
+			this.cz.k = k;
+			this.notify();
+		}
+	}
+	czMove(d) {
+		this.cz.row = (this.cz.row + d + 7) % 7;
+		sound.uiClick(480);
+		this.notify();
+	}
+	czPad() {
+		if (!this.canCustomize()) {
+			this.cz.open = false;
+			return;
+		}
+		for (const idxStr of Object.keys(this.PD)) {
+			const st = this.PD[+idxStr];
+			if (edge(st, "mu")) this.czMove(-1);
+			if (edge(st, "md")) this.czMove(1);
+			if (edge(st, "ml")) this.czChange(this.cz.row, -1);
+			if (edge(st, "mr")) this.czChange(this.cz.row, 1);
+			if (edge(st, "a") || edge(st, "b") || edge(st, "start")) {
+				this.closeCz();
+				return;
+			}
+		}
+	}
+	czChange(row, d) {
+		if (!this.canCustomize()) return;
+		this.cz.row = row;
+		const L = this.locals[this.cz.k] || this.locals[0];
+		const p = L && this.P[L.id];
+		if (!p) return;
+		const cyc = (a, v) => a[(a.indexOf(v) + d + a.length) % a.length];
+		if (row === 6) {
+			const cur = p.pt === 0 || p.pt === 1 ? p.pt : -1;
+			const nt = cyc([-1, 0, 1], cur);
+			p.pt = nt;
+			this.withCtx(L, () => this.setTeam(nt));
+			sound.uiClick(520);
+			return;
+		}
+		const o = { head: p.head, hat: p.hat, face: p.face, back: p.back, color: p.color, pants: p.pants };
+		if (row === 0) {
+			const used = Object.values(this.P).filter((q) => !q.bot && q !== p).map((q) => q.head);
+			let hd = p.head;
+			let n = 0;
+			do {
+				hd = cyc(HEADL, hd);
+				n++;
+			} while (used.includes(hd) && n < HEADL.length);
+			o.head = hd;
+		} else if (row === 1) o.hat = cyc(HATL, o.hat);
+		else if (row === 2) o.face = cyc(FACEL, o.face);
+		else if (row === 3) o.back = cyc(BACKL, o.back);
+		else if (row === 4) o.color = cyc(SHL, o.color);
+		else o.pants = cyc(PCL, o.pants);
+		this.applyLook(p, o);
+		this.withCtx(L, () => this.up({ t: "look", ...o }));
+		sound.uiClick(560);
+	}
+	applyLook(p, o) {
+		if (!p || !HEADS[o.head]) return;
+		if (["head", "hat", "face", "back", "color", "pants"].every((f) => p[f] === o[f])) return;
+		const old = p.g;
+		const g = mkCharacter({
+			name: CNAME[o.head],
+			head: o.head,
+			color: o.color,
+			pants: o.pants,
+			hat: o.hat,
+			face: o.face,
+			back: o.back
+		});
+		g.position.copy(old.position);
+		g.rotation.copy(old.rotation);
+		g.visible = old.visible;
+		this.S.remove(old);
+		this.S.add(g);
+		p.g = g;
+		p.head = o.head;
+		p.name = CNAME[o.head];
+		p.hat = o.hat;
+		p.face = o.face;
+		p.back = o.back;
+		p.color = o.color;
+		p.pants = o.pants;
+		if (p.pt === 0 || p.pt === 1) g.sh.color.set(p.pt ? "#2255ee" : "#ee3333");
 	}
 	togglePause(open) {
 		if (!this.joined) return;
@@ -99226,12 +99409,20 @@ var GameEngine = class GameEngine {
 	setupPeerHandlers() {
 		const pr = this.peer;
 		if (!pr || !pr.on) return;
-		pr.on("disconnected", () => {
+		let rc = 0;
+		const tryRc = () => {
 			setTimeout(() => {
-				if (pr === this.peer && !pr.destroyed && pr.disconnected) try {
-					pr.reconnect();
-				} catch {}
-			}, 800);
+				if (pr === this.peer && !pr.destroyed && pr.disconnected && rc++ < 10) {
+					try {
+						pr.reconnect();
+					} catch {}
+					tryRc();
+				}
+			}, rc ? 2500 : 800);
+		};
+		pr.on("disconnected", tryRc);
+		pr.on("open", () => {
+			rc = 0;
 		});
 		pr.on("call", (c) => {
 			try {
@@ -99248,6 +99439,7 @@ var GameEngine = class GameEngine {
 				return;
 			}
 			conn.on("data", (raw) => {
+				conn.rx = Date.now();
 				const m = raw;
 				if (m.t === "join") {
 					if (conn.pls) return;
@@ -99339,7 +99531,7 @@ var GameEngine = class GameEngine {
 				} catch {}
 				fail({ type: "network" });
 			}
-		}, 12e3);
+		}, 25e3);
 		pr.on("open", () => {
 			clearTimeout(tm);
 			if (pr !== this.peer || done) return;
@@ -99375,12 +99567,12 @@ var GameEngine = class GameEngine {
 			try {
 				pr.destroy();
 			} catch {}
-			if (fail) fail(e);
+			if (fail) fail(e, msg);
 			else this.giveUp(msg);
 		};
 		tm = setTimeout(() => {
 			if (pr === this.peer && !this.joined) bad(connected ? "Could not connect to that party. Check the code and try again." : netErr({ type: "network" }), { type: "timeout" });
-		}, 2e4);
+		}, 25e3);
 		pr.on("open", () => {
 			if (pr !== this.peer || connected) return;
 			connected = true;
@@ -99433,11 +99625,15 @@ var GameEngine = class GameEngine {
 			pt: s.team
 		}));
 	}
+	micQuick() {
+		return Promise.race([sound.requestMic(), new Promise((r) => setTimeout(r, 2500))]);
+	}
 	async lmHostNet() {
 		this.starting = true;
 		this.lmHint = "Opening your party…";
 		this.notify();
-		await sound.requestMic();
+		await this.micQuick();
+		this.netTry = 0;
 		const tryOpen = (n) => {
 			if (n > 14) {
 				this.giveUp("Could not open a party (check your connection)");
@@ -99447,7 +99643,13 @@ var GameEngine = class GameEngine {
 			this.LM.hostCode = c;
 			this.hostNetAs(c, (e) => {
 				if (e.type === "unavailable-id") tryOpen(n + 1);
-				else this.giveUp("Could not open a party: " + netErr(e));
+				else if (NET_RETRY[e.type] && ++this.netTry <= 2) {
+					this.lmHint = "Matchmaking server is slow — retrying…";
+					this.notify();
+					setTimeout(() => {
+						if (this.LM.on && this.starting) tryOpen(n);
+					}, 1200);
+				} else this.giveUp("Could not open a party: " + netErr(e));
 			});
 		};
 		tryOpen(0);
@@ -99456,7 +99658,7 @@ var GameEngine = class GameEngine {
 		this.starting = true;
 		this.lmHint = "Looking for a public party…";
 		this.notify();
-		await sound.requestMic();
+		await this.micQuick();
 		const ss = [];
 		this.LM.slots.forEach((s, i) => {
 			if (s) ss.push({
@@ -99464,6 +99666,7 @@ var GameEngine = class GameEngine {
 				i
 			});
 		});
+		this.netTry = 0;
 		const tryN = (n) => {
 			if (n > 6) {
 				this.giveUp("All public parties are busy");
@@ -99471,6 +99674,14 @@ var GameEngine = class GameEngine {
 			}
 			this.hostNetAs("Q" + n, (e) => {
 				if (e && e.type && e.type !== "unavailable-id") {
+					if (NET_RETRY[e.type] && ++this.netTry <= 2) {
+						this.lmHint = "Matchmaking server is slow — retrying…";
+						this.notify();
+						setTimeout(() => {
+							if (this.LM.on && this.starting) tryN(n);
+						}, 1200);
+						return;
+					}
 					this.giveUp("Could not start Quick Play: " + netErr(e));
 					return;
 				}
@@ -99499,9 +99710,21 @@ var GameEngine = class GameEngine {
 			});
 		});
 		this.LM.pending = ss;
-		await sound.requestMic();
+		await this.micQuick();
 		this.isHost = false;
-		this.joinAs(c, null, this.guestPs(ss));
+		const attempt = (k) => this.joinAs(c, (e, msg) => {
+			const t = e && e.type;
+			if (k < 2 && (NET_RETRY[t] || t === "timeout") && this.LM.on && this.starting) {
+				this.lmHint = `Connecting is slow — retrying (${k + 1}/2)…`;
+				this.notify();
+				setTimeout(() => {
+					if (this.LM.on && this.starting) attempt(k + 1);
+				}, 800);
+				return;
+			}
+			this.giveUp(msg || netErr(e));
+		}, this.guestPs(ss));
+		attempt(0);
 	}
 	acceptInvite(c) {
 		if (this.joined && !this.LM.on) {
@@ -99623,6 +99846,7 @@ var GameEngine = class GameEngine {
 		} : m);
 	}
 	netIn(m) {
+		this.lastHostRx = Date.now();
 		if (m.t === "welcome" || this.locals.length < 2 && m.k === void 0) {
 			this.onMsg(m);
 			return;
@@ -99837,9 +100061,10 @@ var GameEngine = class GameEngine {
 			this.me.sentLift = null;
 		} else if (t === "start") {
 			this.mode = m.type;
+			this.zt = !!m.zt;
 			this.tscore = [0, 0];
 			this.roundSummary = null;
-			const isTeamM = this.mode === "team" || this.mode === "ctf";
+			const isTeamM = this.isTM();
 			m.players.forEach((q) => {
 				const p = this.P[q.id];
 				if (!p) return;
@@ -99979,10 +100204,14 @@ var GameEngine = class GameEngine {
 				this.me.sharkHold = null;
 				this.psay("ELIMINATED — spectating", 2e3);
 			}
+		} else if (t === "look") {
+			this.applyLook(this.P[m.id], m);
+			this.notify();
 		} else if (t === "tp") {
 			const q = this.P[m.id];
 			if (q && this.phase === "lobby") {
 				const tm = m.team;
+				q.pt = tm;
 				q.g.sh.color.set(tm < 0 ? q.g.base : tm ? "#2255ee" : "#ee3333");
 			}
 		} else if (t === "say") this.say(String(m.text || ""), m.ms || 2e3);
@@ -100040,11 +100269,15 @@ var GameEngine = class GameEngine {
 			});
 			return;
 		}
+		if (type === "kothteam") {
+			type = "koth";
+			this.zt = true;
+		} else this.zt = false;
 		this.mode = type;
 		this.tscore = [0, 0];
 		this.round.n = 0;
 		this.roundSummary = null;
-		const isTeamMode = type === "team" || type === "ctf";
+		const isTeamMode = type === "team" || type === "ctf" || type === "koth" && this.zt;
 		const cnt = [0, 0];
 		ps.forEach((p) => {
 			p.score = 0;
@@ -100068,12 +100301,16 @@ var GameEngine = class GameEngine {
 		this.bcast({
 			t: "start",
 			type,
+			zt: this.zt,
 			players: ps.map((q) => ({
 				id: q.id,
 				team: q.team
 			}))
 		});
 		this.newRound();
+	}
+	isTM() {
+		return this.mode === "team" || this.mode === "ctf" || this.mode === "koth" && !!this.zt;
 	}
 	pickMap() {
 		const special = { ctf: "arena13", koth: "arena14" };
@@ -100449,6 +100686,14 @@ var GameEngine = class GameEngine {
 					}
 				} else if (p.alive && p.ko <= now && !p.heldBy && !p.hold && !p.frz && !p.sharkHold) this.grab(p);
 			} else this.rel(p);
+		} else if (m.t === "look") {
+			if (this.phase !== "lobby") return;
+			const taken = new Set(Object.values(this.P).filter((q) => !q.bot && q !== p).map((q) => q.head));
+			const pk = (v, a, d) => a.includes(v) ? v : d;
+			const hd = HEADS[m.head] && !taken.has(m.head) ? m.head : p.head;
+			const o = { head: hd, hat: pk(m.hat, HATL, p.hat), face: pk(m.face, FACEL, p.face), back: pk(m.back, BACKL, p.back), color: pk(m.color, SHL, p.color), pants: pk(m.pants, PCL, p.pants) };
+			Object.values(this.P).filter((q) => q.bot && q.head === hd).forEach((b) => this.dropP(b));
+			this.bcast({ t: "look", id: p.id, ...o });
 		} else if (m.t === "tm") {
 			p.pt = m.team === 0 || m.team === 1 ? m.team : -1;
 			this.bcast({
@@ -100572,7 +100817,7 @@ var GameEngine = class GameEngine {
 			const oz = p.tz;
 			const solids = this.world.solids[this.phase];
 			for (const q of Object.values(this.P)) {
-				if (q === p || !q.alive || q.frz || (q.fimm || 0) > now || (this.mode === "team" || this.mode === "ctf") && q.team === p.team) continue;
+				if (q === p || !q.alive || q.frz || (q.fimm || 0) > now || (this.isTM()) && q.team === p.team) continue;
 				const dx = q.tx - ox;
 				const dy = q.ty + 1.1 - oy;
 				const dz = q.tz - oz;
@@ -100615,6 +100860,54 @@ var GameEngine = class GameEngine {
 				y: p.ty + 1.6,
 				z: p.tz + fz
 			});
+		} else if (k === "sniper") {
+			const ox = p.tx, oy = p.ty + 1.5, oz = p.tz, RNG = 90;
+			const sol = this.world.solids[this.phase];
+			let bt = RNG;
+			for (let t = .8; t <= RNG; t += .5) if (solidAtPoint(sol, ox + fx * t, oy + fy * t, oz + fz * t)) {
+				bt = t;
+				break;
+			}
+			let hit = null, hd = bt;
+			const tmM = this.isTM();
+			for (const q of Object.values(this.P)) {
+				if (q === p || !q.alive || q.heldBy || q.ko > now || tmM && q.team === p.team) continue;
+				const dx = q.tx - ox, dy = q.ty + 1.1 - oy, dz = q.tz - oz;
+				const t = dx * fx + dy * fy + dz * fz;
+				if (t < .5 || t > hd) continue;
+				if (Math.hypot(dx - fx * t, dy - fy * t, dz - fz * t) > 1.15) continue;
+				hit = q;
+				hd = t;
+			}
+			this.bcast({
+				t: "fx",
+				k: "shot",
+				x: ox + fx,
+				y: oy,
+				z: oz + fz
+			});
+			if (hit) {
+				hit.dz = 0;
+				hit.ko = now + 5000;
+				hit.last = p.id;
+				this.to(hit, {
+					t: "hit",
+					vx: fx * 9,
+					vz: fz * 9,
+					vy: 5
+				});
+				this.to(hit, {
+					t: "ko",
+					ms: 5000
+				});
+				this.bcast({
+					t: "fx",
+					k: "boom",
+					x: hit.tx,
+					y: hit.ty + 1,
+					z: hit.tz
+				});
+			}
 		} else if (k === "banana") {
 			this.weapons.spawnBanana(p.tx + Math.sin(yaw) * 1.4, p.ty, p.tz + Math.cos(yaw) * 1.4, p.id, now);
 			this.bcast({
@@ -101137,7 +101430,7 @@ var GameEngine = class GameEngine {
 					}
 				};
 				if (!ko && !stun) {
-					const isTeamM = this.mode === "team" || this.mode === "ctf";
+					const isTeamM = this.isTM();
 					const botGrace = arena && now - this.round.t0 < 3200;
 					ai.t = (ai.t || 0) - dt;
 					if (ai.t <= 0) {
@@ -101600,7 +101893,7 @@ var GameEngine = class GameEngine {
 	}
 	finishPoint(now, prevTscore, winnerTeam, winnerId, winnerName, winnerColor, reason, prevScores) {
 		const ps = Object.values(this.P);
-		const isTeamM = this.mode === "team" || this.mode === "ctf";
+		const isTeamM = this.isTM();
 		const winTo = this.mode === "ctf" ? 1 : this.mode === "koth" ? 2 : 5;
 		const fin = isTeamM ? this.tscore[0] >= winTo || this.tscore[1] >= winTo : ps.some((q) => q.score >= winTo);
 		const summary = {
@@ -101612,6 +101905,7 @@ var GameEngine = class GameEngine {
 			reason,
 			isMatchEnd: fin,
 			mode: this.mode,
+			zt: this.zt,
 			prevTscore,
 			tscore: [this.tscore[0], this.tscore[1]],
 			rows: ps.map((q) => ({
@@ -101731,6 +102025,51 @@ var GameEngine = class GameEngine {
 	kothTick(dt, now, ps) {
 		if (this.round.over || !this.zone) return;
 		const z = this.zone;
+		if (this.zt) {
+			const ins = ps.filter((p) => p.alive && p.ko <= now && !p.frz && !p.heldBy && !p.sharkHold && Math.hypot(p.tx - z.x, p.tz - z.z) <= z.r && Math.abs(p.ty - z.y) < 3);
+			const tms = new Set(ins.map((p) => p.team));
+			if (tms.size === 1) {
+				const ct = [...tms][0], oid = -(ct + 1), nm = ct ? "Blue" : "Red", col = ct ? "#2255ee" : "#ee3333";
+				z.contested = false;
+				if (z.ownerId === oid || z.ownerId === 0 || z.progress <= 0) {
+					z.ownerId = oid;
+					z.ownerName = nm;
+					z.ownerColor = col;
+					z.progress = Math.min(100, z.progress + dt * 20 * Math.sqrt(Math.min(3, ins.length)));
+				} else {
+					z.progress -= dt * 28;
+					if (z.progress <= 0) {
+						z.progress = 0;
+						z.ownerId = oid;
+						z.ownerName = nm;
+						z.ownerColor = col;
+					}
+				}
+				if (z.progress >= 100) {
+					const prevTs = [this.tscore[0], this.tscore[1]];
+					const prevSc = new Map(ps.map((q) => [q.id, q.score]));
+					this.tscore[ct]++;
+					this.bcast({
+						t: "fx",
+						k: "pick",
+						x: z.x,
+						y: z.y + 1.5,
+						z: z.z
+					});
+					this.finishPoint(now, prevTs, ct, -1, nm + " Team", col, nm + " team captured the Zone!", prevSc);
+				}
+			} else if (tms.size >= 2) z.contested = true;
+			else {
+				z.contested = false;
+				z.progress = Math.max(0, z.progress - dt * 5);
+				if (z.progress <= 0) {
+					z.ownerId = 0;
+					z.ownerName = "";
+					z.ownerColor = "";
+				}
+			}
+			return;
+		}
 		const inside = ps.filter((p) => p.alive && p.ko <= now && !p.frz && !p.heldBy && !p.sharkHold && Math.hypot(p.tx - z.x, p.tz - z.z) <= z.r && Math.abs(p.ty - z.y) < 3);
 		if (inside.length === 1) {
 			const cap = inside[0];
@@ -101877,6 +102216,13 @@ var GameEngine = class GameEngine {
 		const elimFloorY = isWaterMap ? -35 : -22;
 		const respawnMode = this.mode === "ctf" || this.mode === "koth";
 		for (const p of ps) {
+			if (p.conn && !p.L && !p.bot && p.conn.rx && now - p.conn.rx > 15e3) {
+				try {
+					p.conn.close();
+				} catch {}
+				this.dropP(p);
+				continue;
+			}
 			const dtp = (now - (p.lt || 0)) / 1e3;
 			if (p.lt && dtp > .01 && dtp < .5) {
 				const a = .5;
@@ -102101,7 +102447,7 @@ var GameEngine = class GameEngine {
 			return;
 		}
 		if (this.me.wcd > 0 || wk === "hole" && this.cur.fHeld) return;
-		this.me.wcd = wk === "ice" ? .08 : wk === "hole" ? .25 : wk === "shark" ? .7 : wk === "hook" ? 1.4 : wk === "bomb" ? 1.2 : wk === "banana" ? .9 : 1.1;
+		this.me.wcd = wk === "ice" ? .08 : wk === "hole" ? .25 : wk === "shark" ? .7 : wk === "hook" ? 1.4 : wk === "bomb" ? 1.2 : wk === "banana" ? .9 : wk === "sniper" ? 1.6 : 1.1;
 		this.me.atk = "w";
 		this.me.atkT = .3;
 		const ap = Math.max(-1.3, Math.min(1.3, (.45 - this.cam.pitch) * 1.1));
@@ -102259,7 +102605,7 @@ var GameEngine = class GameEngine {
 		const opts = this.getPauseOptionCount();
 		for (const idxStr of Object.keys(this.PD)) {
 			const st = this.PD[+idxStr];
-			if (edge(st, "start") || edge(st, "b")) {
+			if (edge(st, "start") || edge(st, "b") || edge(st, "back")) {
 				this.togglePause(false);
 				return;
 			}
@@ -102280,18 +102626,29 @@ var GameEngine = class GameEngine {
 		}
 	}
 	getPauseOptionCount() {
-		if (this.isHost && this.phase === "lobby") return 8;
+		if (this.isHost && this.phase === "lobby") return 9;
+		if (this.phase === "lobby") return 4;
 		return 3;
 	}
 	activatePauseOption(idx) {
 		if (this.isHost && this.phase === "lobby") {
 			if (idx === 0) this.togglePause(false);
-			else if (idx === 1) this.startMatch("ffa");
-			else if (idx === 2) this.startMatch("team");
-			else if (idx === 3) this.startMatch("ctf");
-			else if (idx === 4) this.startMatch("koth");
-			else if (idx === 5) this.addBot();
-			else if (idx === 6) this.clearBots();
+			else if (idx === 1) {
+				this.togglePause(false);
+				this.openCz();
+			} else if (idx === 2) this.startMatch("ffa");
+			else if (idx === 3) this.startMatch("team");
+			else if (idx === 4) this.startMatch("ctf");
+			else if (idx === 5) this.startMatch("koth");
+			else if (idx === 6) this.addBot();
+			else if (idx === 7) this.clearBots();
+			else this.backToMainMenu();
+		} else if (this.phase === "lobby") {
+			if (idx === 0) this.togglePause(false);
+			else if (idx === 1) {
+				this.togglePause(false);
+				this.openCz();
+			} else if (idx === 2) this.toggleMute();
 			else this.backToMainMenu();
 		} else if (idx === 0) this.togglePause(false);
 		else if (idx === 1) this.toggleMute();
@@ -102346,7 +102703,7 @@ var GameEngine = class GameEngine {
 					this.quitLocal();
 				}
 			} else this.cur.quit = 0;
-		} else if (this.isHost && this.phase === "lobby" && edge(st, "back")) this.startMatch("team");
+		} else if (edge(st, "back")) this.togglePause();
 	}
 	quitLocal() {
 		if (!this.netOn || this.isHost && this.phase !== "lobby") this.endMatch();
@@ -102366,7 +102723,7 @@ var GameEngine = class GameEngine {
 		this.me.regrip -= dt;
 		this.me.wcd -= dt;
 		this.cur.noteT -= dt;
-		if (!this.pauseOpen) {
+		if (!this.pauseOpen && !this.cz.open) {
 			this.padInput(dt);
 			this.cam.yaw += ((this.keys.arrowleft ? 1 : 0) - (this.keys.arrowright ? 1 : 0)) * 2.2 * dt;
 			this.cam.pitch = Math.max(-.85, Math.min(1.45, this.cam.pitch + ((this.keys.arrowdown ? 1 : 0) - (this.keys.arrowup ? 1 : 0)) * 1.6 * dt));
@@ -102567,7 +102924,7 @@ var GameEngine = class GameEngine {
 				const sp = inWater ? 4.8 : this.me.holding ? lifting ? 3.8 : 4.8 : 7;
 				this.me.vx += (wx * sp - this.me.vx) * k;
 				this.me.vz += (wz * sp - this.me.vz) * k;
-				if (mp.wp === "shark" || mp.wp === "vortex" || mp.wp === "hook" || mp.wp === "bomb" || mp.wp === "ice" || mp.wp === "hole") {
+				if (mp.wp === "shark" || mp.wp === "vortex" || mp.wp === "hook" || mp.wp === "bomb" || mp.wp === "ice" || mp.wp === "sniper" || mp.wp === "hole") {
 					let d = this.cam.yaw + Math.PI - this.me.ry;
 					d = Math.atan2(Math.sin(d), Math.cos(d));
 					this.me.ry += d * Math.min(1, dt * 18);
@@ -102706,18 +103063,19 @@ var GameEngine = class GameEngine {
 				let hit = false;
 				for (const s of solids) {
 					if (s.held || s.crate) continue;
-					if (Math.abs(px - s.x) <= s.hw + .25 && Math.abs(pz - s.z) <= s.hd + .25 && py > s.bottom - .25 && py < s.top + .25) {
+					if (Math.abs(fx0 - s.x) <= s.hw + .1 && Math.abs(fz0 - s.z) <= s.hd + .1 && fy0 > s.bottom - .1 && fy0 < s.top + .1) continue;
+					if (Math.abs(px - s.x) <= s.hw + .18 && Math.abs(pz - s.z) <= s.hd + .18 && py > s.bottom - .18 && py < s.top + .18) {
 						hit = true;
 						break;
 					}
 				}
 				if (hit) {
-					tt = Math.max(.16, (i - 2) / 24);
+					tt = Math.max(.38, (i - 2) / 24);
 					break;
 				}
 			}
 			if (this.cur.camT === void 0 || this.cur.camT > 1) this.cur.camT = 1;
-			this.cur.camT = tt < this.cur.camT ? this.cur.camT + (tt - this.cur.camT) * Math.min(1, dt * 22) : this.cur.camT + (tt - this.cur.camT) * Math.min(1, dt * 3);
+			this.cur.camT = tt < this.cur.camT ? this.cur.camT + (tt - this.cur.camT) * Math.min(1, dt * 10) : this.cur.camT + (tt - this.cur.camT) * Math.min(1, dt * 3);
 			const ct = this.cur.camT;
 			Cm.position.set(fx0 + (cx0 - fx0) * ct, this.me.y + 1.9 + (cy0 - this.me.y - 1.9) * ct, fz0 + (cz0 - fz0) * ct);
 		}
@@ -102854,6 +103212,7 @@ var GameEngine = class GameEngine {
 	}
 	loop(nowMs) {
 		if (this.disposed) return;
+		this.frameCt = (this.frameCt || 0) + 1;
 		this.animId = requestAnimationFrame((t) => this.loop(t));
 		const dt = Math.min((nowMs - this.lastFrame) / 1e3, .05);
 		this.lastFrame = nowMs;
@@ -102905,17 +103264,23 @@ var GameEngine = class GameEngine {
 			this.renderMenuScene(t);
 			if (!this.bootLoadCleared) {
 				this.bootLoadCleared = true;
-				setTimeout(() => {
-					if (!this.disposed && this.loadingLabel === "Preparing Arenas & Textures…") {
-						this.loadingLabel = null;
-						this.loadingSub = null;
-						this.notify();
-					}
-				}, 550);
+				{
+					const f0 = this.frameCt || 0, t0 = Date.now();
+					const bc = () => {
+						if (this.disposed || this.loadingLabel !== "Preparing Arenas & Textures…") return;
+						if ((this.frameCt || 0) - f0 >= 40 && Date.now() - t0 >= 1200 || Date.now() - t0 > 9000) {
+							this.loadingLabel = null;
+							this.loadingSub = null;
+							this.notify();
+						} else setTimeout(bc, 120);
+					};
+					setTimeout(bc, 120);
+				}
 			}
 			return;
 		}
-		if (this.pauseOpen) this.pausePad();
+		if (this.cz.open) this.czPad();
+		else if (this.pauseOpen) this.pausePad();
 		const psList = Object.values(this.P);
 		if (this.isHost) {
 			for (const L of this.locals) {
@@ -102929,7 +103294,7 @@ var GameEngine = class GameEngine {
 			}
 			this.simCrates(dt);
 			this.simBots(dt);
-			this.weapons.simProj(dt, nowWall, this.phase, this.world.solids[this.phase], this.world.crates[this.phase], psList, this.mode === "ctf" ? "team" : this.mode, (id) => this.P[id] ? this.P[id].team : -1, {
+			this.weapons.simProj(dt, nowWall, this.phase, this.world.solids[this.phase], this.world.crates[this.phase], psList, this.mode === "ctf" || this.isTM() ? "team" : this.mode, (id) => this.P[id] ? this.P[id].team : -1, {
 				onHit: (pid, own, ang, dmg, kb) => {
 					const q = this.P[pid];
 					if (q) this.hitP(q, own, ang, dmg, kb);
@@ -103011,11 +103376,19 @@ var GameEngine = class GameEngine {
 						t: "blow",
 						vx,
 						vz,
-						vy: 6,
-						st: 1.1
+						vy: 9.5,
+						st: 2.4
 					});
-					q.dz += 10;
+					q.dz += 60;
 					q.last = own;
+					if (q.dz >= 100 && q.ko <= Date.now()) {
+						q.dz = 0;
+						q.ko = Date.now() + KO_MS;
+						this.to(q, {
+							t: "ko",
+							ms: KO_MS
+						});
+					}
 					this.bcast({
 						t: "fx",
 						k: "slip",
@@ -103156,6 +103529,14 @@ var GameEngine = class GameEngine {
 		}
 		this.syncObjectiveVisuals(t);
 		this.weapons.tickVisuals(dt, t, (id) => this.P[id] ? this.P[id].g.position : null);
+		if (!this.isHost && this.hostConn && this.joined && this.netOn) {
+			const nw = Date.now();
+			if (document.hidden || !this.lastHostRx) this.lastHostRx = nw;
+			else if (nw - this.lastHostRx > 1e4) {
+				this.friends.pushToast("Lost connection to the host", 5e3);
+				this.backToMainMenu();
+			}
+		}
 		this.sendT += dt;
 		if (this.sendT > .05 && !this.isHost && this.hostConn && this.hostConn.open) {
 			this.sendT = 0;
@@ -103185,13 +103566,18 @@ var GameEngine = class GameEngine {
 		this.renderGame(t);
 		if (!this.bootLoadCleared) {
 			this.bootLoadCleared = true;
-			setTimeout(() => {
-				if (!this.disposed && this.loadingLabel === "Preparing Arenas & Textures…") {
-					this.loadingLabel = null;
-					this.loadingSub = null;
-					this.notify();
-				}
-			}, 550);
+			{
+				const f0 = this.frameCt || 0, t0 = Date.now();
+				const bc = () => {
+					if (this.disposed || this.loadingLabel !== "Preparing Arenas & Textures…") return;
+					if ((this.frameCt || 0) - f0 >= 40 && Date.now() - t0 >= 1200 || Date.now() - t0 > 9000) {
+						this.loadingLabel = null;
+						this.loadingSub = null;
+						this.notify();
+					} else setTimeout(bc, 120);
+				};
+				setTimeout(bc, 120);
+			}
 		}
 	}
 	syncObjectiveVisuals(t) {
@@ -104435,21 +104821,91 @@ function App() {
 				]
 			}),
 			snap?.screen === "game" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-				!snap.localMode && snap.code && snap.code !== "LOCAL" && snap.phase === "lobby" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				snap.netOn && snap.code && snap.code !== "LOCAL" && snap.phase === "lobby" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					onClick: () => {
 						try {
 							navigator.clipboard.writeText(snap.code);
 						} catch {}
 					},
-					className: "fixed top-3 left-1/2 -translate-x-1/2 z-30 rounded-2xl bg-slate-950/85 border-2 border-amber-300/70 px-6 py-3 text-center cursor-pointer pointer-events-auto shadow-xl",
+					className: "cursor-pointer pointer-events-auto",
+					style: { position: "fixed", top: 12, left: "50%", transform: "translateX(-50%)", zIndex: 30, borderRadius: 16, background: "rgba(2,6,23,.88)", border: "2px solid rgba(252,211,77,.8)", padding: "10px 28px", textAlign: "center", boxShadow: "0 10px 30px rgba(0,0,0,.5)" },
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						className: "text-[11px] uppercase tracking-widest text-slate-300",
 						children: "Party code - tell your friends (tap to copy)"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						className: "font-mono-num text-5xl font-black text-amber-300 tracking-[.35em] pl-[.35em]",
+						className: "font-mono-num",
+						style: { fontSize: 56, lineHeight: 1.1, fontWeight: 900, color: "#fcd34d", letterSpacing: ".35em", paddingLeft: ".35em" },
 						children: snap.code
 					})]
 				}),
+				snap.phase === "lobby" && snap.czList.length > 0 && !snap.czOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					onClick: () => eng?.openCz(),
+					className: "font-display cursor-pointer pointer-events-auto",
+					style: { position: "fixed", top: 124, left: "50%", transform: "translateX(-50%)", zIndex: 30, padding: "9px 22px", borderRadius: 12, background: "#e879f9", color: "#020617", fontWeight: 900, fontSize: 14, border: "none", boxShadow: "0 8px 20px rgba(0,0,0,.5)" },
+					children: "🎨 CUSTOMIZE (V)"
+				}),
+				snap.czOpen && (() => {
+					const cs = snap.czList[snap.czK] || snap.czList[0];
+					if (!cs) return null;
+					const rows = [
+						["Creature", cap1(cs.head)],
+						["Hat", HATN[cs.hat]],
+						["Face", FACEN[cs.face]],
+						["Back", BACKN[cs.back]],
+						["Shirt", cs.color],
+						["Pants", cs.pants],
+						["Team", cs.team < 0 ? "Auto" : cs.team ? "Blue" : "Red"]
+					];
+					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "pointer-events-auto",
+						style: { position: "fixed", right: 16, top: "50%", transform: "translateY(-50%)", zIndex: 30, width: 300, borderRadius: 16, background: "rgba(2,6,23,.92)", border: "2px solid rgba(232,121,249,.8)", padding: 12, boxShadow: "0 20px 50px rgba(0,0,0,.6)" },
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "font-display",
+								style: { fontWeight: 900, color: "#f0abfc", textAlign: "center", marginBottom: 8, fontSize: 16 },
+								children: "CUSTOMIZE YOUR LOOK"
+							}),
+							snap.czList.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								style: { display: "flex", gap: 6, marginBottom: 8, justifyContent: "center" },
+								children: snap.czList.map((_, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+									onClick: () => eng?.czPick(i),
+									className: "cursor-pointer",
+									style: { padding: "4px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700, border: "none", background: snap.czK === i ? "#e879f9" : "#1e293b", color: snap.czK === i ? "#020617" : "#e2e8f0" },
+									children: ["Player ", i + 1]
+								}, i))
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								style: { display: "flex", flexDirection: "column", gap: 4, fontSize: 13 },
+								children: rows.map(([label, val], rIdx) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									onClick: (e) => {
+										const rect = e.currentTarget.getBoundingClientRect();
+										eng?.czChange(rIdx, e.clientX > rect.left + rect.width / 2 ? 1 : -1);
+									},
+									className: "cursor-pointer",
+									style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "7px 10px", borderRadius: 8, background: snap.czRow === rIdx ? "#e879f9" : "rgba(30,41,59,.85)", color: snap.czRow === rIdx ? "#020617" : "#e2e8f0", fontWeight: snap.czRow === rIdx ? 800 : 500 },
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: label }), label === "Shirt" || label === "Pants" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+										className: "inline-flex items-center gap-1",
+										children: ["◀ ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {
+											style: { display: "inline-block", width: 18, height: 18, borderRadius: 4, border: "1px solid rgba(255,255,255,.5)", background: val }
+										}), " ▶"]
+									}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: ["◀ ", val, " ▶"] })]
+								}, label))
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10, gap: 8 },
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									style: { fontSize: 10, color: "#94a3b8", lineHeight: 1.2 },
+									children: "Click a row's left/right side, or use arrows / D-pad"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									onClick: () => eng?.closeCz(),
+									className: "cursor-pointer",
+									style: { padding: "7px 16px", borderRadius: 8, background: "#34d399", color: "#020617", fontWeight: 800, fontSize: 12, border: "none" },
+									children: "DONE"
+								})]
+							})
+						]
+					});
+				})(),
 				!snap.localMode && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "fixed top-3 left-3 z-20 max-w-md rounded-xl bg-slate-950/75 border border-white/15 px-3.5 py-2.5 text-xs sm:text-sm pointer-events-auto",
 					children: [
@@ -104537,6 +104993,11 @@ function App() {
 									children: "Capture Zone"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									onClick: () => eng?.startMatch("kothteam"),
+									className: "px-2.5 py-1 rounded bg-lime-400 text-slate-950 font-bold text-xs cursor-pointer",
+									children: "Team Zone"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 									onClick: () => eng?.addBot(),
 									className: "px-2 py-1 rounded bg-slate-800 border border-white/15 text-xs cursor-pointer",
 									children: "+Bot"
@@ -104552,7 +105013,7 @@ function App() {
 				}),
 				snap.localMode && snap.panes.map((pn) => {
 					const pObj = snap.players.find((x) => x.id === pn.id);
-					const isTm = snap.mode === "team" || snap.mode === "ctf";
+					const isTm = (snap.mode === "team" || snap.mode === "ctf" || snap.mode === "koth" && snap.zt);
 					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "fixed z-20 pointer-events-none px-2 py-1 rounded-lg bg-slate-950/75 border border-white/15 text-xs",
 						style: {
@@ -104665,7 +105126,7 @@ function App() {
 						className: "rounded-xl bg-slate-950/80 border border-white/15 px-3 py-2 text-xs text-right min-w-36",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							className: "font-bold text-amber-300 mb-1",
-							children: snap.mode === "team" || snap.mode === "ctf" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+							children: (snap.mode === "team" || snap.mode === "ctf" || snap.mode === "koth" && snap.zt) ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
 									className: "text-rose-400",
 									children: ["RED ", snap.tscore[0]]
@@ -104682,10 +105143,10 @@ function App() {
 							children: snap.players.slice().sort((a, b) => b.score - a.score).map((p) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								className: p.alive ? "text-slate-100" : "text-slate-400",
 								children: [
-									snap.mode === "team" || snap.mode === "ctf" ? p.team ? "🔵 " : "🔴 " : "",
+									(snap.mode === "team" || snap.mode === "ctf" || snap.mode === "koth" && snap.zt) ? p.team ? "🔵 " : "🔴 " : "",
 									p.name,
 									!p.alive && p.respawnSec > 0 ? ` (${p.respawnSec}s)` : "",
-									snap.mode === "team" || snap.mode === "ctf" ? "" : `: ${p.score}`
+									(snap.mode === "team" || snap.mode === "ctf" || snap.mode === "koth" && snap.zt) ? "" : `: ${p.score}`
 								]
 							}, p.id))
 						})]
@@ -104724,7 +105185,7 @@ function App() {
 									})
 								]
 							}),
-							(snap.roundSummary.mode === "team" || snap.roundSummary.mode === "ctf") && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							((snap.roundSummary.mode === "team" || snap.roundSummary.mode === "ctf" || snap.roundSummary.mode === "koth" && snap.roundSummary.zt)) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 								className: "grid grid-cols-2 gap-3 mb-4",
 								children: [0, 1].map((tm) => {
 									const won = snap.roundSummary.winnerTeam === tm;
@@ -104764,7 +105225,7 @@ function App() {
 												children: "+1 PT"
 											})
 										]
-									}), snap.roundSummary.mode === "team" || snap.roundSummary.mode === "ctf" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									}), (snap.roundSummary.mode === "team" || snap.roundSummary.mode === "ctf" || snap.roundSummary.mode === "koth" && snap.roundSummary.zt) ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 										className: `text-xs font-bold ${row.team ? "text-sky-300" : "text-rose-300"}`,
 										children: row.team ? "BLUE" : "RED"
 									}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -104806,6 +105267,7 @@ function App() {
 								className: "space-y-2",
 								children: (snap.isHost && snap.phase === "lobby" ? [
 									"Resume Lobby",
+									"Customize Look (V)",
 									"Start Free-for-All",
 									"Start Team Battle",
 									"Start Capture the Flag",
@@ -104813,6 +105275,11 @@ function App() {
 									"Add AI Bot",
 									"Remove AI Bots",
 									"Return to Main Menu"
+								] : snap.phase === "lobby" ? [
+									"Resume Lobby",
+									"Customize Look (V)",
+									snap.muted ? "Unmute Mic" : "Mute Mic",
+									"Leave to Main Menu"
 								] : [
 									"Resume Match",
 									snap.muted ? "Unmute Mic" : "Mute Mic",
@@ -104970,4 +105437,3 @@ var ErrorBoundary = class extends import_react.Component {
 (0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ErrorBoundary, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(App, {}) }));
 })();</script></body>
 </html>
-
