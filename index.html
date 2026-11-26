@@ -104396,14 +104396,22 @@ var GameEngine = class GameEngine {
 	touchJoystickStart(id, x, y) {
 		this.lastTouch = Date.now();
 		sound.unlock();
-		if (!this.joined || this.LM.on) return;
-		if (x < window.innerWidth / 2 && this.jt === null) {
+		if (!this.joined || this.LM.on) return null;
+		if (x < window.innerWidth / 2) {
+			if (this.jt !== null) return null;
 			this.jt = id;
 			this.j0 = [x, y];
-		} else if (this.ct === null) {
-			this.ct = id;
-			this.c0 = [x, y];
+			return "joy";
 		}
+		if (this.ct !== null) return null;
+		this.ct = id;
+		this.c0 = [x, y];
+		return "cam";
+	}
+	touchReset() {
+		this.jt = null;
+		this.ct = null;
+		if (this.MAIN) this.MAIN.joy.x = this.MAIN.joy.y = 0;
 	}
 	touchJoystickMove(id, x, y) {
 		if (!this.joined || this.LM.on) return null;
@@ -104445,9 +104453,12 @@ var GameEngine = class GameEngine {
 		return endedJoy;
 	}
 	touchAction(action, pressed) {
+		this.lastTouch = Date.now();
 		sound.unlock();
 		this.withCtx(this.MAIN, () => {
-			if (action === "L") this.hand(0, pressed);
+			if (action === "P") {
+				if (pressed) this.reqPickup();
+			} else if (action === "L") this.hand(0, pressed);
 			else if (action === "R") this.hand(1, pressed);
 			else if (action === "H" && pressed) this.act("h");
 			else if (action === "K" && pressed) this.act("k");
@@ -104727,6 +104738,10 @@ function App() {
 			clearInterval(id);
 		};
 	}, [snap?.screen, snap?.slots]);
+	(0, import_react.useEffect)(() => {
+		engineRef.current?.touchReset();
+		setJoyVis((v) => v.on ? { ...v, on: false } : v);
+	}, [snap?.screen, snap?.pauseOpen]);
 	const eng = engineRef.current;
 	const handleAuthSubmit = async (e) => {
 		e.preventDefault();
@@ -104758,8 +104773,8 @@ function App() {
 					if (!eng) return;
 					for (const t of Array.from(e.changedTouches)) {
 						if (t.target.closest("button,input")) continue;
-						eng.touchJoystickStart(t.identifier, t.clientX, t.clientY);
-						if (t.clientX < window.innerWidth / 2) setJoyVis({
+						const kind = eng.touchJoystickStart(t.identifier, t.clientX, t.clientY);
+						if (kind === "joy") setJoyVis({
 							on: true,
 							x: t.clientX,
 							y: t.clientY,
@@ -106077,8 +106092,14 @@ function App() {
 					})
 				}),
 				snap.touchDevice && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "fixed right-3 bottom-3 z-20 grid grid-cols-3 gap-2 w-48",
+					className: "fixed z-20 grid grid-cols-3 gap-2",
+					style: {
+						width: "14rem",
+						right: "max(0.75rem, env(safe-area-inset-right))",
+						bottom: "max(0.75rem, env(safe-area-inset-bottom))"
+					},
 					children: [
+						["P", "PICK UP"],
 						["H", "HEAD"],
 						["J", "JUMP"],
 						["S", "LIFT"],
@@ -106088,19 +106109,37 @@ function App() {
 						["D", "DANCE"],
 						["F", "FIRE"],
 						["M", "MIC"]
-					].map(([code, lbl]) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-						onTouchStart: (e) => {
+					].map(([code, lbl]) => {
+						const press = (e) => {
 							e.preventDefault();
+							try {
+								e.currentTarget.setPointerCapture(e.pointerId);
+							} catch {}
+							e.currentTarget.classList.add("active");
 							eng?.touchAction(code, true);
-						},
-						onTouchEnd: (e) => {
-							e.preventDefault();
+						};
+						const release = (e) => {
+							e.currentTarget.classList.remove("active");
 							eng?.touchAction(code, false);
-						},
-						onTouchCancel: () => eng?.touchAction(code, false),
-						className: "touch-btn py-3 rounded-xl bg-slate-900/80 border border-white/25 text-[11px] font-bold active:scale-95 active:bg-amber-300 active:text-slate-950",
-						children: lbl
-					}, code))
+						};
+						return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+							onPointerDown: press,
+							onPointerUp: release,
+							onPointerCancel: release,
+							onContextMenu: (e) => e.preventDefault(),
+							style: code === "P" ? {
+								gridColumn: "span 3",
+								padding: "1rem 0",
+								background: "rgba(252, 211, 77, 0.92)",
+								borderColor: "#fef3c7",
+								color: "#020617",
+								fontSize: "0.875rem",
+								letterSpacing: "0.04em"
+							} : { padding: "0.875rem 0" },
+							className: `touch-btn rounded-xl border font-bold ${code === "P" ? "" : "bg-slate-900/80 border-white/25 text-white text-xs"}`,
+							children: lbl
+						}, code);
+					})
 				})
 			] }),
 			snap && snap.toasts.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
