@@ -14021,21 +14021,45 @@ var HEADS = {
 	frog: "#3fb36b",
 	pig: "#ffa6bd",
 	panda: "#f4f4f4",
-	lizard: "#b6d43c"
+	lizard: "#b6d43c",
+	llama: "#f1e4cc"
 };
 var CNAME = {
-	dog: "Dizzy Doggo",
-	cat: "Sneaky Kitty",
-	bear: "Grumpy Bear Boss",
-	rabbit: "Bad Bunny",
-	fox: "Foxy Flash",
-	shark: "Smooth Sharky",
-	chicken: "Silly Chicken Pro",
-	frog: "Hoppy Froggo",
-	pig: "Mighty Piggy",
-	panda: "Chill Panda King",
-	lizard: "Lazy Lizard Lord"
+	dog: "Rocket Rex",
+	cat: "Luna Whiskers",
+	bear: "Bruno Bruiser",
+	rabbit: "Zippy Hops",
+	fox: "Ember Fox",
+	shark: "Finn Fang",
+	chicken: "Cluck Norris",
+	frog: "Ribbit Rico",
+	pig: "Hamlet Hogg",
+	panda: "Pandy Zen",
+	lizard: "Gecko Gus",
+	llama: "Lucky Llama"
 };
+var WEPL = [
+	"shark",
+	"vortex",
+	"cane",
+	"hook",
+	"bomb",
+	"banana",
+	"hole",
+	"sniper",
+	"shield",
+	"paint"
+];
+var DANCES = [
+	3,
+	20,
+	21,
+	22,
+	23,
+	24,
+	25,
+	26
+];
 var HEADL = Object.keys(HEADS);
 var SHL = [
 	"#3aa6ff",
@@ -14131,7 +14155,9 @@ var WK = {
 	bomb: 6,
 	banana: 7,
 	hole: 8,
-	sniper: 10
+	sniper: 10,
+	shield: 11,
+	paint: 12
 };
 var KW = {
 	1: "shark",
@@ -14141,7 +14167,9 @@ var KW = {
 	6: "bomb",
 	7: "banana",
 	8: "hole",
-	10: "sniper"
+	10: "sniper",
+	11: "shield",
+	12: "paint"
 };
 var WN = {
 	shark: "Shark Gun",
@@ -14151,11 +14179,15 @@ var WN = {
 	bomb: "Bomb",
 	banana: "Banana Peel",
 	hole: "Black Hole Blaster",
-	sniper: "Sniper Rifle"
+	sniper: "Sniper Rifle",
+	shield: "Riot Shield",
+	paint: "Paint Gun"
 };
 var WI = {
 	hole: "⚫",
 	sniper: "🎯",
+	shield: "🛡️",
+	paint: "🎨",
 	bomb: "💣",
 	banana: "🍌",
 	hook: "🪝",
@@ -14170,7 +14202,9 @@ var WCD = {
 	bomb: 1200,
 	banana: 900,
 	hole: 250,
-	sniper: 1500
+	sniper: 1500,
+	shield: 0,
+	paint: 700
 };
 var WAM = {
 	shark: 5,
@@ -14180,7 +14214,9 @@ var WAM = {
 	bomb: 3,
 	banana: 3,
 	hole: 1,
-	sniper: 3
+	sniper: 3,
+	shield: 4,
+	paint: 3
 };
 var ATK = {
 	l: [16, 8.5],
@@ -14207,7 +14243,10 @@ var MAPK = [
 	"arena11",
 	"arena12",
 	"arena13",
-	"arena14"
+	"arena14",
+	"arena15",
+	"arena16",
+	"arena17"
 ];
 var MAPN = {
 	arena0: "Pirate Deck",
@@ -14224,7 +14263,10 @@ var MAPN = {
 	arena11: "Double Decker",
 	arena12: "Crate Yard",
 	arena13: "Flag Fortress",
-	arena14: "Zone Temple"
+	arena14: "Zone Temple",
+	arena15: "Spinner Circles",
+	arena16: "Road Rage",
+	arena17: "Zombie Apocalypse"
 };
 var MAP_HAZARD_NAME = {
 	arena0: "Pirate Armada Cannons",
@@ -14235,11 +14277,14 @@ var MAP_HAZARD_NAME = {
 	arena5: "Rogue Bumper Shuttles",
 	arena6: "Arcane Sky-Bolt Beacons",
 	arena7: "Siege Mortar Barrage",
-	arena8: "Collapsing Floor Tiles",
+	arena8: "Falling & Rising Tiles",
 	arena9: "Charging Arena Rollers",
 	arena10: "Runaway Hover Trains",
 	arena11: "Swinging Crusher Arms",
-	arena12: "Sky Crane TNT Drops"
+	arena12: "Sky Crane TNT Drops",
+	arena15: "Floor Drop & Spinning Arm",
+	arena16: "Highway Car Hopping",
+	arena17: "Undead Respawns"
 };
 var MAP_THEME = {
 	lobby: {
@@ -14390,6 +14435,33 @@ var MAP_THEME = {
 		sunColor: "#fef3c7",
 		hemiSky: "#fde68a",
 		hemiGround: "#44403c"
+	},
+	arena15: {
+		skyTop: "#0b1030",
+		skyMid: "#3b1d6e",
+		skyBot: "#f472b6",
+		fog: "#2e1065",
+		sunColor: "#fbcfe8",
+		hemiSky: "#c4b5fd",
+		hemiGround: "#312e81"
+	},
+	arena16: {
+		skyTop: "#1e1b4b",
+		skyMid: "#be123c",
+		skyBot: "#fb923c",
+		fog: "#7c2d12",
+		sunColor: "#fed7aa",
+		hemiSky: "#fdba74",
+		hemiGround: "#1f2937"
+	},
+	arena17: {
+		skyTop: "#022c22",
+		skyMid: "#14532d",
+		skyBot: "#65a30d",
+		fog: "#1a2e05",
+		sunColor: "#bef264",
+		hemiSky: "#86efac",
+		hemiGround: "#1c1917"
 	}
 };
 var MODE_LABELS = {
@@ -14418,6 +14490,7 @@ var DEFAULT_BINDINGS = {
 		leftHand: "z",
 		rightHand: "x",
 		lift: "shift",
+		pickup: "r",
 		fire: "f",
 		dance: "c"
 	},
@@ -14427,9 +14500,10 @@ var DEFAULT_BINDINGS = {
 		kick: "b",
 		leftHand: "lb",
 		rightHand: "rb",
-		lift: "lt",
+		lift: "y",
+		pickup: "lt",
 		fire: "rt",
-		dance: "y"
+		dance: "rs"
 	}
 };
 /**
@@ -52088,6 +52162,40 @@ function getContactTex() {
 	if (!contactTex) contactTex = createContactShadowTexture();
 	return contactTex;
 }
+function makeCarGroup(col) {
+	const g = new Group();
+	const bm = new MeshStandardMaterial({ color: col, roughness: .35, metalness: .4 });
+	const glass = new MeshStandardMaterial({ color: "#1e293b", roughness: .2, metalness: .5 });
+	const body = new Mesh(new BoxGeometry(2.4, 1.5, 4), bm);
+	body.position.y = .95;
+	g.add(body);
+	const roof = new Mesh(new BoxGeometry(2.5, .15, 3.6), bm);
+	roof.position.y = 1.78;
+	g.add(roof);
+	for (const sx of [-1, 1]) {
+		const w = new Mesh(new BoxGeometry(.06, .6, 2.6), glass);
+		w.position.set(sx * 1.21, 1.35, -.2);
+		g.add(w);
+	}
+	const ws = new Mesh(new BoxGeometry(2.1, .6, .06), glass);
+	ws.position.set(0, 1.35, 2.02);
+	g.add(ws);
+	for (const [wx, wz] of [[1.2, 1.3], [-1.2, 1.3], [1.2, -1.3], [-1.2, -1.3]]) {
+		const w = new Mesh(new CylinderGeometry(.45, .45, .35, 14), new MeshStandardMaterial({ color: "#0f172a", roughness: .8 }));
+		w.rotation.z = Math.PI / 2;
+		w.position.set(wx, .45, wz);
+		g.add(w);
+	}
+	for (const hx of [-.8, .8]) {
+		const hl = new Mesh(new BoxGeometry(.4, .25, .1), new MeshStandardMaterial({ color: "#fef08a", emissive: "#fde047", emissiveIntensity: 1 }));
+		hl.position.set(hx, .8, 2.02);
+		g.add(hl);
+		const tl = new Mesh(new BoxGeometry(.4, .25, .1), new MeshStandardMaterial({ color: "#ef4444", emissive: "#dc2626", emissiveIntensity: .8 }));
+		tl.position.set(hx, .8, -2.02);
+		g.add(tl);
+	}
+	return g;
+}
 function makeBananaGroup(sc = 1) {
 	const root = new Group();
 	const g = new Group();
@@ -52182,6 +52290,14 @@ function wpModel(k) {
 		bg.position.set(0, -.5, 0);
 		bg.rotation.set(0, Math.PI / 2, 0);
 		g.add(bg);
+	} else if (k === "shield") {
+		add(new BoxGeometry(1.5, 1.8, .14), M("#38bdf8", .25, .7), 0, 0, 0);
+		add(new BoxGeometry(1.3, 1.6, .05), M("#e2e8f0", .3, .6), 0, 0, .09);
+		add(new CylinderGeometry(.22, .22, .12, 14), M("#facc15", .3, .8), 0, 0, .15).rotation.x = Math.PI / 2;
+	} else if (k === "paint") {
+		add(new CylinderGeometry(.07, .09, .8, 10), M("#7c3aed", .3, .4), 0, -.55, 0);
+		add(new SphereGeometry(.22, 10, 8), M("#f472b6", .3, .1), 0, -.15, .14);
+		add(new BoxGeometry(.12, .3, .1), M("#1f2937", .5, .3), 0, .1, 0);
 	} else if (k === "sniper") {
 		add(new CylinderGeometry(.045, .05, 1.25, 10), M("#1f2937", .3, .6), 0, -.8, 0);
 		add(new CylinderGeometry(.065, .065, .14, 10), M("#0f172a", .3, .6), 0, -1.45, 0, false);
@@ -52393,6 +52509,14 @@ function mkCharacter(o) {
 		ball(.07, blk, 0, -.04, .52, h, 1.3, .9, 1, false);
 		add(new TorusGeometry(.06, .013, 6, 12, Math.PI), blk, 0, -.13, .5, h, false).rotation.z = Math.PI;
 		ball(.14, white, 0, .02, -.1, T);
+	} else if (o.head === "llama") {
+		[-1, 1].forEach((s) => ear(ball(.12, fur, s * .22, .62, -.02, h, .6, 2.4, .5), s * .18));
+		ball(.3, fur, 0, .38, .02, h, 1.2, .8, 1);
+		ball(.24, cream, 0, -.12, .4, h, .95, .85, 1.25);
+		[-1, 1].forEach((s) => ball(.03, blk, s * .07, -.06, .66, h, 1, 1, 1, false));
+		add(new TorusGeometry(.1, .014, 6, 12, Math.PI), blk, 0, -.2, .62, h, false).rotation.z = Math.PI;
+		ball(.18, fur, 0, -.35, -.05, h, 1.5, 1, 1);
+		ball(.16, cream, 0, .1, -.14, T);
 	} else if (o.head === "lizard") {
 		const dk = M("#6f8f1f", .55);
 		ball(.22, fur, 0, -.08, .4, h, 1, .8, 1.1);
@@ -52601,16 +52725,22 @@ function mkCharacter(o) {
 		"vortex",
 		"cane",
 		"hook",
-		"hammer",
 		"bomb",
 		"banana",
 		"hole",
-		"ice"
+		"sniper",
+		"paint",
+		"shield"
 	]) {
 		const m = wpModel(k);
-		m.position.y = -.72;
 		m.visible = false;
-		g.A[1].add(m);
+		if (k === "shield") {
+			m.position.set(0, 1.35, .85);
+			g.add(m);
+		} else {
+			m.position.y = -.72;
+			g.A[1].add(m);
+		}
 		g.wm[k] = m;
 	}
 	return g;
@@ -52743,6 +52873,48 @@ function animateCharacter(g, a, t, pr = .5) {
 		g.A[0].rotation.set(-1.5 + o, 0, .28);
 		g.A[1].rotation.set(-1.5 - o, 0, -.28);
 		g.body.rotation.x = .1;
+	} else if (a === 20) {
+		const k = Math.floor(t * 4) % 4;
+		g.A[0].rotation.set(k < 2 ? -1.57 : 0, 0, .3);
+		g.A[1].rotation.set(k % 2 ? -1.57 : 0, 0, -.3);
+		g.head.rotation.y = (k - 1.5) * .35;
+		g.body.rotation.y = (k - 1.5) * .15;
+	} else if (a === 21) {
+		const up = Math.sin(t * 5) > 0;
+		g.A[0].rotation.set(0, 0, up ? .2 : 2.8);
+		g.A[1].rotation.set(0, 0, up ? -2.8 : -.2);
+		g.body.rotation.z = up ? .15 : -.15;
+		y = Math.abs(Math.sin(t * 5)) * .1;
+	} else if (a === 22) {
+		g.body.rotation.y = t * 9;
+		g.A[0].rotation.z = 1.2;
+		g.A[1].rotation.z = -1.2;
+		y = Math.abs(Math.sin(t * 4)) * .3;
+	} else if (a === 23) {
+		const s = Math.sin(t * 9);
+		g.A[0].rotation.set(0, 0, .5 + s * .9);
+		g.A[1].rotation.set(0, 0, -.5 + s * .9);
+		g.body.rotation.z = -s * .3;
+		g.L[0].rotation.x = s * .3;
+		g.L[1].rotation.x = -s * .3;
+	} else if (a === 24) {
+		g.A[0].rotation.set(-1.2, 0, 1.4 + Math.sin(t * 8) * .1);
+		g.A[1].rotation.set(-1.2, 0, -1.4 - Math.sin(t * 8) * .1);
+		g.head.rotation.x = -.1;
+		y = Math.abs(Math.sin(t * 6)) * .14;
+	} else if (a === 25) {
+		const s = Math.sin(t * 10);
+		g.L[0].rotation.x = s * .9;
+		g.L[1].rotation.x = -s * .9;
+		g.A[0].rotation.x = -s * .8;
+		g.A[1].rotation.x = s * .8;
+		g.body.rotation.z = s * .1;
+		g.head.rotation.z = s * .12;
+	} else if (a === 26) {
+		g.A[0].rotation.set(-3, 0, .3);
+		g.A[1].rotation.set(-3, 0, -.3);
+		y = Math.abs(Math.sin(t * 7)) * .5;
+		g.head.rotation.x = -.2;
 	}
 	if (g.wk && a !== 6 && (a === 0 || a === 1)) g.A[1].rotation.set(g.wk === "cane" ? -1.1 : -1, 0, -.12);
 	{
@@ -54113,7 +54285,8 @@ function buildWorlds(scene) {
 				s,
 				baseTop: top,
 				baseY: s.m.position.y,
-				idx: tidx
+				idx: tidx,
+				map: "arena8"
 			});
 			tidx++;
 		}));
@@ -54563,6 +54736,172 @@ function buildWorlds(scene) {
 		PKS[g] = [["vortex", -10, 6], ["shark", 10, -6], ["cane", 6, 10], ["sniper", -6, -10], ["bomb", 0, 5.5]];
 		SPW[g] = Array.from({ length: 8 }, (_, i) => [Math.round(Math.sin(i * Math.PI / 4) * 13.5 * 2) / 2, Math.round(Math.cos(i * Math.PI / 4) * 13.5 * 2) / 2]);
 	}
+	const T512 = (draw) => {
+		const c = document.createElement("canvas");
+		c.width = c.height = 512;
+		draw(c.getContext("2d"));
+		const tx = new CanvasTexture(c);
+		tx.anisotropy = 4;
+		return tx;
+	};
+	const hidMat = new MeshBasicMaterial({ visible: false });
+	const cylMat = (side, tex) => [new MeshStandardMaterial({ color: side, roughness: .7 }), new MeshStandardMaterial({ map: tex, roughness: .55 }), new MeshStandardMaterial({ color: side })];
+	{
+		const g = "arena15";
+		const S = 256 / 17;
+		const markers = [[8.5, 8.5], [-8.5, 8.5], [8.5, -8.5], [-8.5, -8.5], [0, 0]];
+		const floorTex = T512((c) => {
+			const gr = c.createRadialGradient(256, 256, 20, 256, 256, 256);
+			gr.addColorStop(0, "#8b5cf6");
+			gr.addColorStop(1, "#4c1d95");
+			c.fillStyle = gr;
+			c.fillRect(0, 0, 512, 512);
+			c.strokeStyle = "rgba(255,255,255,.16)";
+			c.lineWidth = 3;
+			for (const r of [5, 10, 14.5]) {
+				c.beginPath();
+				c.arc(256, 256, r * S, 0, 7);
+				c.stroke();
+			}
+			c.strokeStyle = "#f0abfc";
+			c.lineWidth = 9;
+			c.beginPath();
+			c.arc(256, 256, 16.5 * S, 0, 7);
+			c.stroke();
+			for (const [mx, mz] of markers) {
+				const R = (mx === 0 && mz === 0 ? 2.6 : 4) * S, cx = 256 + mx * S, cy = 256 + mz * S;
+				c.fillStyle = "rgba(250,204,21,.32)";
+				c.beginPath();
+				c.arc(cx, cy, R, 0, 7);
+				c.fill();
+				c.strokeStyle = "#facc15";
+				c.lineWidth = 6;
+				c.stroke();
+				c.setLineDash([10, 8]);
+				c.beginPath();
+				c.arc(cx, cy, R * .68, 0, 7);
+				c.stroke();
+				c.setLineDash([]);
+				c.fillStyle = "#fff7c2";
+				c.beginPath();
+				c.moveTo(cx, cy - R * .38);
+				c.lineTo(cx + R * .3, cy + R * .22);
+				c.lineTo(cx - R * .3, cy + R * .22);
+				c.closePath();
+				c.fill();
+			}
+		});
+		const padTex = T512((c) => {
+			const gr = c.createRadialGradient(256, 256, 10, 256, 256, 256);
+			gr.addColorStop(0, "#fde68a");
+			gr.addColorStop(1, "#f59e0b");
+			c.fillStyle = gr;
+			c.fillRect(0, 0, 512, 512);
+			c.strokeStyle = "#92400e";
+			c.lineWidth = 26;
+			c.beginPath();
+			c.arc(256, 256, 238, 0, 7);
+			c.stroke();
+			c.lineWidth = 8;
+			c.beginPath();
+			c.arc(256, 256, 150, 0, 7);
+			c.stroke();
+		});
+		const cyl = (R, side, tex) => {
+			const m = new Mesh(new CylinderGeometry(R, R, 12, 72), cylMat(side, tex));
+			m.receiveShadow = true;
+			return m;
+		};
+		let ti = 3000;
+		const disc = (cx, cz, R, rd, top, vis, pad, ovl) => {
+			const n = Math.max(1, Math.round(2 * R / rd)), d = 2 * R / n;
+			let first = null;
+			for (let k = 0; k < n; k++) {
+				const zl = -R + (k + .5) * d;
+				const hw = Math.sqrt(Math.max(.2, R * R - zl * zl));
+				const s = slab(g, cx, top, cz + zl, hw * 2, d - .04, void 0, "#1e1b4b", "#8b5cf6");
+				s.m.material = hidMat;
+				s.m.castShadow = false;
+				const rec = { s, baseTop: top, baseY: s.m.position.y, idx: ti++, map: "arena15", pad, deps: [] };
+				checkerTiles.push(rec);
+				if (!first) first = rec;
+				if (pad) {
+					s.held = true;
+					s.m.position.y -= 30;
+				}
+			}
+			vis.position.set(cx, top - 6, cz);
+			groups[g].add(vis);
+			first.deps.push({ m: vis, y0: vis.position.y, s: null });
+			if (pad) {
+				vis.visible = false;
+				vis.position.y -= 30;
+			}
+			first.ovl = ovl;
+		};
+		disc(0, 0, 17, 1, 0, cyl(17, "#2e1065", floorTex), false, { r: 17, y: .12, cx: 0, cz: 0 });
+		for (const [px, pz] of [[8.5, 8.5], [-8.5, 8.5], [8.5, -8.5], [-8.5, -8.5]]) disc(px, pz, 4, .8, 2, cyl(4, "#b45309", padTex), true, { r: 4, y: 2.15, cx: px, cz: pz });
+		disc(0, 0, 2.6, .8, 2, cyl(2.6, "#b45309", padTex), true, { r: 2.6, y: 2.15, cx: 0, cz: 0 });
+		light(g, 0, 10, 0, "#f9a8d4", 1.6, 46);
+		light(g, 12, 5, 12, "#a78bfa", 1.1, 26);
+		light(g, -12, 5, -12, "#a78bfa", 1.1, 26);
+		MC[g] = [[0, -7], [0, 7], [-7, 0], [7, 0]];
+		PKS[g] = [["sniper", 6, 0], ["banana", -6, 0], ["bomb", 0, 6], ["shark", 0, -6]];
+		SPW[g] = Array.from({ length: 8 }, (_, i) => [Math.round(Math.sin(i * Math.PI / 4) * 12 * 2) / 2, Math.round(Math.cos(i * Math.PI / 4) * 12 * 2) / 2]);
+	}
+	{
+		const g = "arena16";
+		const road = new Mesh(new CylinderGeometry(34, 34, .3, 96), new MeshStandardMaterial({ color: "#1f2937", roughness: .9 }));
+		road.position.y = -3.15;
+		road.receiveShadow = true;
+		groups[g].add(road);
+		for (const lr of [15, 21]) for (let i = 0; i < 56; i++) {
+			const a = i / 56 * Math.PI * 2;
+			prop(g, new BoxGeometry(1.6, .06, .3), M("#facc15", .6), Math.cos(a) * lr, -2.98, Math.sin(a) * lr, 0, -(a + Math.PI / 2), 0, false);
+		}
+		for (let i = 0; i < 18; i++) {
+			const a = i / 18 * Math.PI * 2 + .2, r = 44 + i * 7 % 5, h = 12 + i * 13 % 9 * 3;
+			prop(g, new BoxGeometry(7, h, 7), M(i % 2 ? "#334155" : "#475569", .8), Math.cos(a) * r, -3 + h / 2, Math.sin(a) * r, 0, -a, 0, false);
+		}
+		const cols = ["#dc2626", "#2563eb", "#16a34a", "#f59e0b", "#a855f7", "#06b6d4", "#ec4899", "#84cc16", "#f97316"];
+		let ci = 0;
+		[[12, .583], [18, -.472], [24, .4167]].forEach(([R, w], li) => {
+			for (let k = 0; k < 3; k++) {
+				const ph = k * Math.PI * 2 / 3 + li * .9;
+				const car = makeCarGroup(cols[ci++ % cols.length]);
+				const sg = w > 0 ? 1 : -1;
+				const s = addMover(g, R * Math.cos(ph), -1.15, R * Math.sin(ph), 3.2, 1.85, 3.2, "#555", (t) => {
+					const a = ph + w * t;
+					car.rotation.y = Math.atan2(-Math.sin(a) * sg, Math.cos(a) * sg);
+					return [R * Math.cos(a), R * Math.sin(a)];
+				});
+				s.m.material = hidMat;
+				s.m.castShadow = false;
+				car.position.y = -.925;
+				s.m.add(car);
+			}
+		});
+		light(g, 0, 12, 0, "#fb923c", 1.5, 60);
+		light(g, 0, 2, 26, "#f43f5e", 1, 34);
+		light(g, 0, 2, -26, "#38bdf8", 1, 34);
+		MC[g] = [];
+		PKS[g] = [];
+		SPW[g] = Array.from({ length: 8 }, (_, i) => [Math.round(Math.sin(i * Math.PI / 4) * 12 * 2) / 2, Math.round(Math.cos(i * Math.PI / 4) * 12 * 2) / 2]);
+	}
+	{
+		const g = "arena17";
+		const tex = createStoneTileTextures("#57534e", "#3f3f46", 8);
+		slab(g, 0, 0, 0, 34, 34, tex, "#27272a");
+		for (const [x, z, w, d] of [[-9, -9, 6, 1.2], [9, 9, 6, 1.2], [-9, 9, 1.2, 6], [9, -9, 1.2, 6]]) box(g, x, 1.5, z, w, 1.5, d, "#71717a");
+		box(g, 0, 1, 0, 6, 1, 6, "#3f3f46");
+		for (const [x, z] of [[-14.5, 0], [14.5, 0], [0, -14.5], [0, 14.5], [-14, -14], [14, 14]]) prop(g, new BoxGeometry(1.2, 2.2, .4), M("#a8a29e", .9), x, 1.1, z, 0, (x + z) * .2, 0);
+		light(g, 0, 9, 0, "#84cc16", 1.5, 50);
+		light(g, 13, 4, 13, "#ef4444", 1, 26);
+		light(g, -13, 4, -13, "#ef4444", 1, 26);
+		MC[g] = [[0, 6], [0, -6], [6, 0], [-6, 0]];
+		PKS[g] = [["bomb", 5, 5], ["banana", -5, 5], ["shark", 5, -5], ["sniper", -5, -5]];
+		SPW[g] = Array.from({ length: 8 }, (_, i) => [Math.round(Math.sin(i * Math.PI / 4) * 11 * 2) / 2, Math.round(Math.cos(i * Math.PI / 4) * 11 * 2) / 2]);
+	}
 	const se = (H, p) => (x, z) => Math.pow(Math.abs(x) / H, p) + Math.pow(Math.abs(z) / H, p) <= 1;
 	const shipShape = (x, z) => {
 		let hw;
@@ -54809,6 +55148,7 @@ function buildWorlds(scene) {
 		return y;
 	};
 	MAPK.forEach((g) => {
+		if (g === "arena16") return;
 		if (!PKS[g].some((a) => a[0] === "hook")) {
 			const s = SPW[g][4];
 			PKS[g].push([
@@ -54821,7 +55161,9 @@ function buildWorlds(scene) {
 			["sniper", 2],
 			["bomb", 7],
 			["banana", 10],
-			["hole", 5]
+			["hole", 5],
+			["shield", 3],
+			["paint", 8]
 		].forEach(([k, i]) => {
 			const s = SPW[g][i % SPW[g].length];
 			PKS[g].push([
@@ -55161,6 +55503,13 @@ var HazardSystem = class {
 		this.lastWave = 0;
 		this.fallenTiles = /* @__PURE__ */ new Map();
 		this.warnTiles = /* @__PURE__ */ new Map();
+		this.riseTiles = /* @__PURE__ */ new Map();
+		this.ovl = /* @__PURE__ */ new Map();
+		this.cars = null;
+		this.kr = null;
+		this.sp = null;
+		this.spA = 0;
+		this.sph = {};
 		this.level = 1;
 		this.statusLabel = "";
 		this.visualRoot = new Group();
@@ -55198,15 +55547,32 @@ var HazardSystem = class {
 		this.statusLabel = "";
 		this.fallenTiles.clear();
 		this.warnTiles.clear();
+		this.riseTiles.clear();
+		this.cars = null;
+		this.kr = null;
+		this.sp = null;
+		this.spA = 0;
+		this.sph = {};
 		this.restoreAllTiles();
 		this.clearVisuals();
 	}
 	clearVisuals() {
+		for (const [, o] of this.ovl) o.visible = false;
 		for (const [, v] of this.meshPool) this.visualRoot.remove(v.mesh);
 		this.meshPool.clear();
 	}
 	restoreAllTiles() {
 		for (const t of this.checkerTiles) {
+			if (t.pad) {
+				t.s.held = true;
+				t.s.m.visible = false;
+				t.s.m.position.y = t.baseY - 30;
+				if (t.deps) for (const d of t.deps) {
+					d.m.visible = false;
+					d.m.position.y = d.y0 - 30;
+				}
+				continue;
+			}
 			t.s.held = false;
 			t.s.top = t.baseTop;
 			t.s.bottom = t.baseTop - (12 + t.baseTop);
@@ -55240,10 +55606,96 @@ var HazardSystem = class {
 				Math.round(e.phase * 100) / 100
 			]),
 			fallenTiles: [...this.fallenTiles.keys()],
-			warnTiles: [...this.warnTiles.keys()]
+			warnTiles: [...this.warnTiles.keys()],
+			riseTiles: [...this.riseTiles.keys()]
 		};
 	}
+	simCheckers(now) {
+		this.fallenTiles.clear();
+		this.warnTiles.clear();
+		this.riseTiles.clear();
+		if (this.entities.length) this.entities = [];
+		this.level = 1;
+		this.statusLabel = "CHECKER BLOCKS · SHAKING = FALLS · GLOWING = RISES";
+		const el = (now - this.startTime) / 1e3;
+		if (el < 6) return;
+		const P = 15, UP = 7.5, WARN = 2, DOWN = 3.5;
+		for (const t of this.checkerTiles) {
+			if (t.map !== "arena8") continue;
+			const c = (el + (t.idx * 37 % 16) / 16 * P) % P;
+			if (c < UP) continue;
+			if (c < UP + WARN) this.warnTiles.set(t.idx, 1);
+			else if (c < UP + WARN + DOWN) this.fallenTiles.set(t.idx, 1);
+			else {
+				this.fallenTiles.set(t.idx, 1);
+				this.riseTiles.set(t.idx, 1);
+			}
+		}
+	}
+	simSpinner(dt, now, players, cb) {
+		this.fallenTiles.clear();
+		this.warnTiles.clear();
+		this.riseTiles.clear();
+		this.level = 1;
+		const el = (now - this.startTime) / 1e3, T = 30;
+		for (const t of this.checkerTiles) {
+			if (t.map !== "arena15") continue;
+			if (t.pad) {
+				if (el < T) this.fallenTiles.set(t.idx, 1);
+				if (el >= T - 2 && el < T) this.riseTiles.set(t.idx, 1);
+			} else if (el >= T) this.fallenTiles.set(t.idx, 1);
+			else if (el >= T - 2) this.warnTiles.set(t.idx, 1);
+		}
+		if (el < T) {
+			this.entities = [];
+			this.statusLabel = "FLOOR DROPS IN " + Math.ceil(T - el) + "s · GET READY FOR THE CIRCLES";
+			return;
+		}
+		const e = el - T;
+		const sp = e < 3 ? 0 : Math.min(7, .9 + (e - 3) * .09);
+		this.spA = (this.spA || 0) + sp * dt;
+		if (!this.sp) this.sp = { id: this.nextId++, kind: "spin", x: 0, z: 0, ang: 0, r: 0, phase: 0, y: -6 };
+		const s = this.sp;
+		s.y = -6 + 8 * Math.min(1, e / 2.6);
+		s.r = sp;
+		s.phase = this.spA;
+		this.entities = [s];
+		this.statusLabel = "SPINNER SPEED " + (sp / .9).toFixed(1) + "x · JUMP OVER THE ARM!";
+		if (sp <= 0) return;
+		const ca = Math.cos(this.spA), sa = Math.sin(this.spA);
+		for (const p of players) {
+			if (!p.alive || p.heldBy) continue;
+			const al = p.tx * ca + p.tz * sa, pe = -p.tx * sa + p.tz * ca;
+			if (al < .2 || al > 15.6 || Math.abs(pe) > 1) continue;
+			if (p.ty > 2.62 || p.ty < .6) continue;
+			if (now - (this.sph[p.id] || 0) < 900) continue;
+			this.sph[p.id] = now;
+			const kb = 7 + sp * 1.3;
+			cb.onBlow(p.id, -sa * kb, 7, ca * kb, .9);
+			cb.onFx("smash", p.tx, p.ty + 1, p.tz);
+		}
+	}
+	simCars() {
+		this.fallenTiles.clear();
+		this.warnTiles.clear();
+		this.riseTiles.clear();
+		if (this.entities.length) this.entities = [];
+		this.level = 1;
+		this.statusLabel = "HIGHWAY · JUMP FROM CAR TO CAR · FALL = ROADKILL";
+	}
 	updateHost(dt, now, phase, solids, players, callbacks) {
+		if (phase === "arena16") {
+			this.simCars();
+			return;
+		}
+		if (phase === "arena8") {
+			this.simCheckers(now);
+			return;
+		}
+		if (phase === "arena15") {
+			this.simSpinner(dt, now, players, callbacks);
+			return;
+		}
 		if (this.crumbPhases && this.crumbPhases.has(phase)) {
 			if (this.entities.length > 0) this.entities = [];
 			this.simCrumble(now, phase);
@@ -55251,9 +55703,10 @@ var HazardSystem = class {
 		}
 		if (phase !== "arena1") {
 			if (this.entities.length > 0) this.entities = [];
-			if (this.fallenTiles.size > 0 || this.warnTiles.size > 0) {
+			if (this.fallenTiles.size > 0 || this.warnTiles.size > 0 || this.riseTiles.size > 0) {
 				this.fallenTiles.clear();
 				this.warnTiles.clear();
+				this.riseTiles.clear();
 				this.restoreAllTiles();
 			}
 			this.level = 1;
@@ -55481,10 +55934,28 @@ var HazardSystem = class {
 			}
 		}
 	}
+	setOverlay(t, warn, rise, now) {
+		let o = this.ovl.get(t.idx);
+		if (!(warn || rise) || t.map === "arena15" && !t.ovl) {
+			if (o) o.visible = false;
+			return;
+		}
+		if (!o) {
+			const geo = t.ovl ? new CylinderGeometry(t.ovl.r, t.ovl.r, .25, 48) : new BoxGeometry(t.s.hw * 2 + .1, .3, t.s.hd * 2 + .1);
+			o = new Mesh(geo, new MeshBasicMaterial({ color: "#ef4444", transparent: true, opacity: .5, depthWrite: false }));
+			this.visualRoot.add(o);
+			this.ovl.set(t.idx, o);
+		}
+		o.visible = true;
+		o.material.color.set(rise ? "#3b82f6" : "#ef4444");
+		o.material.opacity = .5 + .2 * Math.sin(now * .014);
+		o.position.set(t.ovl ? t.ovl.cx : t.s.x, t.ovl ? t.ovl.y : t.baseTop + (rise ? -.1 : .16), t.ovl ? t.ovl.cz : t.s.z);
+	}
 	applyTileStates(dt, now) {
 		for (const t of this.checkerTiles) {
 			const isFallen = this.fallenTiles.has(t.idx);
 			const isWarn = this.warnTiles.has(t.idx);
+			if (t.map) this.setOverlay(t, isWarn, this.riseTiles.has(t.idx), now);
 			if (isFallen) {
 				t.s.held = true;
 				t.s.m.position.y = MathUtils.damp(t.s.m.position.y, t.baseY - 24, 6, dt);
@@ -55505,7 +55976,7 @@ var HazardSystem = class {
 				t.s.m.position.y = MathUtils.damp(t.s.m.position.y, t.baseY, 8, dt);
 				t.s.top = t.baseTop;
 				t.s.bottom = t.baseTop - (16 + t.baseTop);
-				if (isWarn) {
+				if (isWarn && !t.map) {
 					t.s.m.position.x = t.s.x + Math.sin(now * .05) * .16;
 					t.s.m.position.z = t.s.z + Math.cos(now * .045) * .16;
 				} else {
@@ -55526,6 +55997,8 @@ var HazardSystem = class {
 		for (const idx of snap.fallenTiles) this.fallenTiles.set(idx, 1);
 		this.warnTiles.clear();
 		for (const idx of snap.warnTiles) this.warnTiles.set(idx, 1);
+		this.riseTiles.clear();
+		for (const idx of snap.riseTiles || []) this.riseTiles.set(idx, 1);
 		this.applyTileStates(dt, now);
 		const seen = /* @__PURE__ */ new Set();
 		for (const [id, kind, x, y, z, ang, r, phase] of snap.items) {
@@ -55564,6 +56037,12 @@ var HazardSystem = class {
 			m.position.x += (item.tx - m.position.x) * k;
 			m.position.y += (item.ty - m.position.y) * k;
 			m.position.z += (item.tz - m.position.z) * k;
+			if (item.kind === "spin") {
+				if (item.sa === void 0) item.sa = item.tphase;
+				item.sa += item.tr * dt;
+				item.sa += (item.tphase - item.sa) * Math.min(1, dt * 6);
+				m.rotation.y = -item.sa;
+			}
 			if (item.kind === "shark") {
 				const sm = m;
 				let df = item.tang - sm.rotation.y;
@@ -55596,6 +56075,17 @@ var HazardSystem = class {
 		}
 	}
 	createMesh(kind, r) {
+		if (kind === "spin") {
+			const g = new Group();
+			const arm = new Mesh(new BoxGeometry(15.5, .7, .9), new MeshStandardMaterial({ color: "#ef4444", roughness: .4, emissive: "#7f1d1d", emissiveIntensity: .45 }));
+			arm.position.set(7.75, .35, 0);
+			arm.castShadow = true;
+			g.add(arm);
+			const cap = new Mesh(new CylinderGeometry(1, 1, .9, 16), new MeshStandardMaterial({ color: "#1e293b", roughness: .4, metalness: .6 }));
+			cap.position.y = .45;
+			g.add(cap);
+			return g;
+		}
 		if (kind === "ship") return mkPirateShip();
 		if (kind === "shark") return mkSharkMesh(2.5, true);
 		if (kind === "ball") {
@@ -55784,6 +56274,7 @@ function readPad(g) {
 		back: B(8),
 		start: B(9),
 		ls: B(10),
+		rs: B(11),
 		du: B(12),
 		dd: B(13),
 		dl: B(14),
@@ -98203,10 +98694,18 @@ var GameEngine = class GameEngine {
 						...DEFAULT_BINDINGS.kb,
 						...parsed.kb || {}
 					},
-					pad: {
-						...DEFAULT_BINDINGS.pad,
-						...parsed.pad || {}
-					}
+					pad: (() => {
+						const o = {
+							...DEFAULT_BINDINGS.pad,
+							...parsed.pad || {}
+						};
+						if (!(parsed.pad && parsed.pad.pickup)) {
+							o.lift = "y";
+							o.pickup = "lt";
+							o.dance = "rs";
+						}
+						return o;
+					})()
 				};
 			}
 		} catch {}
@@ -98274,6 +98773,8 @@ var GameEngine = class GameEngine {
 			mode: "ffa",
 			map: "random",
 			bots: -1,
+			offMaps: /* @__PURE__ */ new Set(),
+			offWeps: /* @__PURE__ */ new Set(),
 			pv: [
 				null,
 				null,
@@ -98437,9 +98938,9 @@ var GameEngine = class GameEngine {
 				if (k === kb.rightHand) this.hand(1, true);
 				if (k === kb.headbutt) this.act("h");
 				if (k === kb.kick) this.act("k");
+				if (k === (kb.pickup || "r")) this.reqPickup();
 				if (k === kb.dance || k === "1") {
-					this.me.em = 3;
-					this.me.emT = 3;
+					this.doDance();
 				}
 				if (k === "2") {
 					this.me.em = 4;
@@ -98683,6 +99184,8 @@ var GameEngine = class GameEngine {
 			lmMode: this.LM.mode,
 			lmMap: this.LM.map,
 			lmBots: this.LM.bots,
+			offMaps: [...this.LM.offMaps],
+			offWeps: [...this.LM.offWeps],
 			lmBotsEffective: this.botsN(),
 			lmNet: this.LM.net,
 			lmCode: this.LM.code,
@@ -98701,7 +99204,8 @@ var GameEngine = class GameEngine {
 				wp: p.wp,
 				am: p.am,
 				color: p.color,
-				bot: !!p.bot
+				bot: !!p.bot,
+				head: p.head
 			})),
 			flags: this.flags.map((f) => ({ ...f })),
 			zone: this.zone ? { ...this.zone } : null,
@@ -99205,7 +99709,8 @@ var GameEngine = class GameEngine {
 	}
 	botsN() {
 		const h = this.LM.slots.filter(Boolean).length;
-		if (this.LM.net === "host" || this.LM.net === "quick") return Math.max(0, Math.min(this.LM.bots < 0 ? 0 : this.LM.bots, 8 - h));
+		if (this.LM.net === "quick") return 0;
+		if (this.LM.net === "host") return Math.max(0, Math.min(this.LM.bots < 0 ? 0 : this.LM.bots, 8 - h));
 		let b = this.LM.bots < 0 ? h < 2 ? 3 : 0 : this.LM.bots;
 		b = Math.max(b, 2 - h);
 		return Math.max(0, Math.min(b, 8 - h));
@@ -100214,6 +100719,14 @@ var GameEngine = class GameEngine {
 				q.pt = tm;
 				q.g.sh.color.set(tm < 0 ? q.g.base : tm ? "#2255ee" : "#ee3333");
 			}
+		} else if (t === "paint") {
+			this.paintMe(m.ms || 4e3);
+		} else if (t === "zomb") {
+			const zq = this.P[m.id];
+			if (zq) {
+				zq.zombie = !!m.on;
+				zq.g.sh.color.set(m.on ? "#4d7c0f" : zq.g.base);
+			}
 		} else if (t === "say") this.say(String(m.text || ""), m.ms || 2e3);
 		else if (t === "end") {
 			this.phase = "lobby";
@@ -100318,14 +100831,15 @@ var GameEngine = class GameEngine {
 		if (this.LM.map !== "random" && MAPK.includes(this.LM.map) && this.LM.map !== "arena13" && this.LM.map !== "arena14") return this.LM.map;
 		const pool = [];
 		for (const m of MAPK) {
-			if (m === "arena13" || m === "arena14") continue;
+			if (m === "arena13" || m === "arena14" || this.LM.offMaps.has(m)) continue;
 			pool.push(m);
 			if (m !== "arena1") pool.push(m);
 		}
+		if (!pool.length) pool.push("arena2");
 		let k;
 		do
 			k = pool[Math.random() * pool.length | 0];
-		while (k === this.phase);
+		while (k === this.phase && new Set(pool).size > 1);
 		return k;
 	}
 	computeCTFBases(mapKey) {
@@ -100429,7 +100943,29 @@ var GameEngine = class GameEngine {
 				p.sp = sp[i % sp.length];
 			});
 		}
+		for (const u of this.world.pk[mapKey] || []) {
+			u.dis = this.LM.offWeps.has(u.k);
+			if (u.dis) u.on = false;
+			else if (!u.on && !u.off) u.on = true;
+		}
+		if (mapKey === "arena16") {
+			const cs = this.world.movers.filter((m) => m.scene === "arena16").sort(() => Math.random() - .5);
+			const tn = performance.now() / 1e3 + this.moff + .3;
+			ps.forEach((p, i) => {
+				const pos = cs[i % cs.length].f(tn);
+				p.sp = [pos[0], pos[1]];
+			});
+		}
 		ps.forEach((p) => {
+			if (p.zombie) {
+				p.zombie = false;
+				p.g.sh.color.set(p.g.base);
+				this.bcast({
+					t: "zomb",
+					id: p.id,
+					on: false
+				});
+			}
 			p.alive = true;
 			p.elimTime = void 0;
 			p.respawnAt = void 0;
@@ -100463,7 +100999,7 @@ var GameEngine = class GameEngine {
 			players: ps.map((q) => ({
 				id: q.id,
 				x: q.sp[0],
-				y: this.world.groundY(mapKey, q.sp[0], q.sp[1]) + 2.2,
+				y: mapKey === "arena16" ? .95 : this.world.groundY(mapKey, q.sp[0], q.sp[1]) + 2.2,
 				z: q.sp[1]
 			})),
 			ts: this.tscore
@@ -100588,6 +101124,7 @@ var GameEngine = class GameEngine {
 	}
 	hitP(q, id, ang, dm, kb, extraVy) {
 		const now = Date.now();
+		if (this.shieldBlock(q, ang)) return;
 		if (id) q.last = id;
 		let k = false;
 		if (q.ko <= now) {
@@ -100702,6 +101239,7 @@ var GameEngine = class GameEngine {
 				team: p.pt
 			});
 		} else if (m.t === "w") this.fireWeapon(p, m.ay, m.ap);
+		else if (m.t === "pk") p.pkReq = Date.now() + 450;
 		else if (m.t === "jmp") {
 			if (p.frz) {
 				p.fj = (p.fj || 0) + 1;
@@ -100772,7 +101310,7 @@ var GameEngine = class GameEngine {
 	}
 	fireWeapon(p, ay, ap) {
 		const now = Date.now();
-		if (!p.alive || p.ko > now || p.hold || p.frz || p.sharkHold || !p.wp || p.wp === "cane" || p.wp === "hammer" || now < (p.wcd || 0)) return;
+		if (!p.alive || p.ko > now || p.hold || p.frz || p.sharkHold || !p.wp || p.wp === "cane" || p.wp === "hammer" || p.wp === "shield" || now < (p.wcd || 0)) return;
 		const k = p.wp;
 		const yaw = typeof ay === "number" ? ay : p.try;
 		const pitch = typeof ap === "number" ? Math.max(-1.3, Math.min(1.3, ap)) : p.ap || 0;
@@ -100860,8 +101398,47 @@ var GameEngine = class GameEngine {
 				y: p.ty + 1.6,
 				z: p.tz + fz
 			});
+		} else if (k === "paint") {
+			const ox = p.tx, oy = p.ty + 1.6, oz = p.tz, RNG = 38;
+			const sol = this.world.solids[this.phase];
+			let bt = RNG;
+			for (let t = .8; t <= RNG; t += .5) if (solidAtPoint(sol, ox + fx * t, oy + fy * t, oz + fz * t)) {
+				bt = t;
+				break;
+			}
+			let hit = null, hd = bt;
+			const tmM = this.isTM();
+			for (const q of Object.values(this.P)) {
+				if (q === p || !q.alive || q.heldBy || tmM && q.team === p.team) continue;
+				const dx = q.tx - ox, dy = q.ty + 1.1 - oy, dz = q.tz - oz;
+				const t = dx * fx + dy * fy + dz * fz;
+				if (t < .5 || t > hd) continue;
+				if (Math.hypot(dx - fx * t, dy - fy * t, dz - fz * t) > 1.2) continue;
+				hit = q;
+				hd = t;
+			}
+			this.bcast({
+				t: "fx",
+				k: "shot",
+				x: ox + fx,
+				y: oy,
+				z: oz + fz
+			});
+			if (hit && !this.shieldBlock(hit, Math.atan2(fx, fz))) {
+				this.to(hit, {
+					t: "paint",
+					ms: 4e3
+				});
+				this.bcast({
+					t: "fx",
+					k: "pick",
+					x: hit.tx,
+					y: hit.ty + 1.2,
+					z: hit.tz
+				});
+			}
 		} else if (k === "sniper") {
-			const ox = p.tx, oy = p.ty + 1.5, oz = p.tz, RNG = 90;
+			const ox = p.tx, oy = p.ty + 1.9, oz = p.tz, RNG = 90;
 			const sol = this.world.solids[this.phase];
 			let bt = RNG;
 			for (let t = .8; t <= RNG; t += .5) if (solidAtPoint(sol, ox + fx * t, oy + fy * t, oz + fz * t)) {
@@ -100886,6 +101463,7 @@ var GameEngine = class GameEngine {
 				y: oy,
 				z: oz + fz
 			});
+			if (hit && this.shieldBlock(hit, Math.atan2(fx, fz))) hit = null;
 			if (hit) {
 				hit.dz = 0;
 				hit.ko = now + 5000;
@@ -101201,6 +101779,7 @@ var GameEngine = class GameEngine {
 		}
 	}
 	addBot() {
+		if (this.LM.net === "quick") return;
 		if (!this.isHost || this.phase !== "lobby" || Object.keys(this.P).length >= 8) return;
 		const rnd = (a) => a[Math.random() * a.length | 0];
 		const used = Object.values(this.P).map((q) => q.head);
@@ -101702,6 +102281,10 @@ var GameEngine = class GameEngine {
 						b.z += oz / d * (minSep - d) * .5;
 					}
 				}
+				if (this.loadingLabel) {
+					b.vx = 0;
+					b.vz = 0;
+				}
 				stepBody(b, dt, bRad, bHh, solids, null);
 				if (b.sup && b.sup.pad) {
 					b.vy = 17.5;
@@ -101818,6 +102401,106 @@ var GameEngine = class GameEngine {
 			id: p.id
 		});
 	}
+	shieldBlock(q, ang) {
+		if (q.wp !== "shield" || !(q.am > 0)) return false;
+		const fr = q.try ?? q.ry ?? 0;
+		if (Math.sin(ang) * Math.sin(fr) + Math.cos(ang) * Math.cos(fr) > -.1) return false;
+		q.am--;
+		if (q.am <= 0) {
+			q.wp = null;
+			q.am = 0;
+		}
+		this.bcast({
+			t: "fx",
+			k: "smash",
+			x: q.tx,
+			y: q.ty + 1.1,
+			z: q.tz
+		});
+		return true;
+	}
+	paintMe(ms) {
+		if (typeof document === "undefined") return;
+		let el = this.paintEl;
+		if (!el) {
+			el = document.createElement("div");
+			el.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0";
+			const cols = ["#ec4899", "#8b5cf6", "#22d3ee", "#facc15", "#84cc16"];
+			let h = "";
+			for (let i = 0; i < 22; i++) {
+				const s = 18 + Math.random() * 26;
+				h += `<div style="position:absolute;left:${Math.random() * 100 - s / 4}%;top:${Math.random() * 100 - s / 4}%;width:${s}vmax;height:${s * .8}vmax;border-radius:${40 + Math.random() * 20}% ${50 + Math.random() * 20}% ${40 + Math.random() * 20}% ${50 + Math.random() * 20}%;background:${cols[i % 5]};opacity:.93"></div>`;
+			}
+			el.innerHTML = h;
+			document.body.appendChild(el);
+			this.paintEl = el;
+		}
+		el.style.transition = "opacity .15s";
+		el.style.opacity = "1";
+		clearTimeout(this.paintT);
+		this.paintT = setTimeout(() => {
+			el.style.transition = "opacity 1s";
+			el.style.opacity = "0";
+		}, Math.max(500, ms - 1e3));
+	}
+	reqPickup() {
+		if (!this.joined || this.me.spec) return;
+		this.up({ t: "pk" });
+	}
+	doDance() {
+		this.me.dn = ((this.me.dn || 0) + 1) % DANCES.length;
+		this.me.em = DANCES[this.me.dn];
+		this.me.emT = 4;
+	}
+	toggleMapOff(g) {
+		if (!this.isHost) return;
+		const s = this.LM.offMaps;
+		if (s.has(g)) s.delete(g);
+		else if (MAPK.filter((m) => m !== "arena13" && m !== "arena14" && m !== g && !s.has(m)).length) s.add(g);
+		this.notify();
+	}
+	toggleWepOff(k) {
+		if (!this.isHost) return;
+		const s = this.LM.offWeps;
+		if (s.has(k)) s.delete(k);
+		else s.add(k);
+		this.notify();
+	}
+	kickBot(id) {
+		const b = this.P[id];
+		if (this.isHost && b && b.bot) {
+			this.dropP(b);
+			this.notify();
+		}
+	}
+	carSpawn() {
+		const cars = this.world.movers.filter((m) => m.scene === "arena16");
+		if (!cars.length) return null;
+		const pos = cars[Math.random() * cars.length | 0].f(performance.now() / 1e3 + this.moff + .3);
+		return [pos[0], pos[1]];
+	}
+	elimZ(p, now) {
+		if (this.phase !== "arena17") {
+			this.elim(p);
+			return;
+		}
+		if (!p.zombie) {
+			p.zombie = true;
+			p.elimTime = now;
+			p.g.sh.color.set("#4d7c0f");
+			this.bcast({
+				t: "zomb",
+				id: p.id,
+				on: true
+			});
+			this.bcast({
+				t: "say",
+				text: p.name + " is now a ZOMBIE!",
+				ms: 1700
+			});
+		}
+		this.dropForRespawn(p, now);
+	}
 	dropForRespawn(p, now) {
 		if (this.mode === "ctf") this.dropFlagIfCarried(p, true);
 		p.alive = false;
@@ -101858,11 +102541,17 @@ var GameEngine = class GameEngine {
 			sz = bz + Math.sin(ang) * 1.4;
 		} else {
 			const sp = this.world.SPW[mapKey];
-			const pick = sp[Math.random() * sp.length | 0] || [0, 0];
+			const pick = (mapKey === "arena16" ? this.carSpawn() : null) || sp[Math.random() * sp.length | 0] || [0, 0];
 			sx = pick[0];
 			sz = pick[1];
 		}
-		const sy = this.world.groundY(mapKey, sx, sz) + 2.2;
+		let sy = this.world.groundY(mapKey, sx, sz) + 2.2;
+		if (mapKey === "arena16") sy = .95;
+		if (p.zombie && mapKey === "arena17") {
+			sx = (Math.random() * 2 - 1) * 11;
+			sz = (Math.random() * 2 - 1) * 11;
+			sy = 55;
+		}
 		p.alive = true;
 		p.respawnAt = void 0;
 		p.respawnSec = 0;
@@ -101890,6 +102579,13 @@ var GameEngine = class GameEngine {
 			y: sy,
 			z: sz
 		});
+		if (p.zombie && mapKey === "arena17") {
+			p.ko = Date.now() + 5200;
+			this.to(p, {
+				t: "ko",
+				ms: 5200
+			});
+		}
 	}
 	finishPoint(now, prevTscore, winnerTeam, winnerId, winnerName, winnerColor, reason, prevScores) {
 		const ps = Object.values(this.P);
@@ -102129,7 +102825,7 @@ var GameEngine = class GameEngine {
 			return;
 		}
 		if (this.mode === "ctf" || this.mode === "koth") return;
-		const al = ps.filter((p) => p.alive);
+		const al = ps.filter((p) => p.alive && !p.zombie);
 		if (!(this.mode === "team" ? new Set(al.map((p) => p.team)).size <= 1 : al.length <= 1)) return;
 		let winner = al[0] || null;
 		if (!winner && ps.length > 0) {
@@ -102184,12 +102880,13 @@ var GameEngine = class GameEngine {
 		const isReady = (q) => q.ready || q.id === this.myId;
 		for (const u of this.world.pk[this.phase]) {
 			if (!u.on) {
-				if (now > u.t && !u.off) u.on = true;
+				if (now > u.t && !u.off && !u.dis) u.on = true;
 				continue;
 			}
 			for (const p of ps) {
 				if (!p.alive || !isReady(p) || p.ko > now || p.heldBy || p.sharkHold) continue;
-				if (Math.hypot(p.tx - u.x, p.tz - u.z) < 1.2 && Math.abs(p.ty - u.y) < 1.5) {
+				if ((p.bot || (p.pkReq || 0) > now) && Math.hypot(p.tx - u.x, p.tz - u.z) < 1.45 && Math.abs(p.ty - u.y) < 1.6) {
+					p.pkReq = 0;
 					p.wp = u.k;
 					p.am = WAM[u.k];
 					p.wcd = 0;
@@ -102213,7 +102910,7 @@ var GameEngine = class GameEngine {
 		const ps = Object.values(this.P);
 		const wy = this.waterLevel();
 		const isWaterMap = wy > -100;
-		const elimFloorY = isWaterMap ? -35 : -22;
+		const elimFloorY = this.phase === "arena16" ? -3 : isWaterMap ? -35 : -22;
 		const respawnMode = this.mode === "ctf" || this.mode === "koth";
 		for (const p of ps) {
 			if (p.conn && !p.L && !p.bot && p.conn.rx && now - p.conn.rx > 15e3) {
@@ -102256,15 +102953,15 @@ var GameEngine = class GameEngine {
 							ms: 1600
 						});
 						if (respawnMode) this.dropForRespawn(p, now);
-						else this.elim(p);
+						else this.elimZ(p, now);
 					}
 				} else p.air = Math.min(100, p.air + 2.25);
 			} else if (p.alive) p.air = 100;
 			if (this.phase !== "lobby" && p.alive && p.ty < elimFloorY && !p.sharkHold) {
 				if (respawnMode) this.dropForRespawn(p, now);
-				else this.elim(p);
+				else this.elimZ(p, now);
 			}
-			if (this.phase !== "lobby" && respawnMode && !p.alive && p.respawnAt && !this.round.over) {
+			if (this.phase !== "lobby" && (respawnMode || p.zombie) && !p.alive && p.respawnAt && !this.round.over) {
 				p.respawnSec = Math.max(1, Math.ceil((p.respawnAt - now) / 1e3));
 				if (now >= p.respawnAt) this.respawnPlayer(p);
 			}
@@ -102438,6 +103135,7 @@ var GameEngine = class GameEngine {
 	useWeapon() {
 		const wk = this.P[this.myId]?.wp;
 		if (!wk || !this.joined || this.me.spec || this.me.frz || this.me.ko > 0 || this.me.stun > 0 || this.me.holding || this.me.cling || this.me.sharkHold) return;
+		if (wk === "shield") return;
 		if (wk === "cane") {
 			this.act("c");
 			return;
@@ -102454,11 +103152,15 @@ var GameEngine = class GameEngine {
 		this.up({
 			t: "w",
 			ap,
-			ay: this.me.ry
+			ay: wk === "sniper" ? this.cam.yaw + Math.PI : this.me.ry
 		});
 	}
 	padFor(L) {
-		if (L.pad === "kb" || L.pad === "touch" || L.pad === null) return null;
+		if (L.pad === "kb" || L.pad === "touch" || L.pad === null) {
+			if (this.locals.length > 1) return null;
+			const k0 = Object.keys(this.PD)[0];
+			return k0 === void 0 ? null : this.PD[+k0];
+		}
 		if (typeof L.pad === "number") return this.PD[L.pad] || null;
 		const k = Object.keys(this.PD)[0];
 		return k === void 0 ? null : this.PD[+k];
@@ -102682,9 +103384,9 @@ var GameEngine = class GameEngine {
 		if (ch(b.rightHand)) this.hand(1, !!s[b.rightHand]);
 		if (edge(st, b.headbutt)) this.act("h");
 		if (edge(st, b.kick)) this.act("k");
+		if (edge(st, b.pickup || "lt")) this.reqPickup();
 		if (edge(st, b.dance)) {
-			this.me.em = 3;
-			this.me.emT = 3;
+			this.doDance();
 		}
 		if (edge(st, "dl")) {
 			this.me.em = 4;
@@ -102727,7 +103429,16 @@ var GameEngine = class GameEngine {
 			this.padInput(dt);
 			this.cam.yaw += ((this.keys.arrowleft ? 1 : 0) - (this.keys.arrowright ? 1 : 0)) * 2.2 * dt;
 			this.cam.pitch = Math.max(-.85, Math.min(1.45, this.cam.pitch + ((this.keys.arrowdown ? 1 : 0) - (this.keys.arrowup ? 1 : 0)) * 1.6 * dt));
-			if (this.keys.f) this.useWeapon();
+			if (this.P[this.myId]?.wp === "sniper") {
+				if (this.keys.f) this.cur.scopeT = (this.cur.scopeT || 0) + dt;
+				else if (this.cur.fHeld) {
+					if ((this.cur.scopeT || 0) > .12) this.useWeapon();
+					this.cur.scopeT = 0;
+				}
+			} else {
+				this.cur.scopeT = 0;
+				if (this.keys.f) this.useWeapon();
+			}
 			this.cur.fHeld = !!this.keys.f;
 			if (this.me.frz && this.keys[" "] && !this.me.jp) this.up({ t: "jmp" });
 			this.me.jp = !!this.keys[" "];
@@ -102787,8 +103498,8 @@ var GameEngine = class GameEngine {
 				});
 			}
 		}
-		let ix = this.pauseOpen ? 0 : (this.keys.d ? 1 : 0) - (this.keys.a ? 1 : 0) + this.joy.x + this.cur.pj.x;
-		let iz = this.pauseOpen ? 0 : (this.keys.s ? 1 : 0) - (this.keys.w ? 1 : 0) + this.joy.y + this.cur.pj.y;
+		let ix = this.pauseOpen || this.loadingLabel ? 0 : (this.keys.d ? 1 : 0) - (this.keys.a ? 1 : 0) + this.joy.x + this.cur.pj.x;
+		let iz = this.pauseOpen || this.loadingLabel ? 0 : (this.keys.s ? 1 : 0) - (this.keys.w ? 1 : 0) + this.joy.y + this.cur.pj.y;
 		const len = Math.hypot(ix, iz);
 		if (len > 1) {
 			ix /= len;
@@ -102838,7 +103549,7 @@ var GameEngine = class GameEngine {
 					const dm = Math.exp(-dt * 3.5);
 					this.me.vx *= dm;
 					this.me.vz *= dm;
-					if (!this.pauseOpen && this.keys[" "] && can && this.me.sup) {
+					if (!this.pauseOpen && !this.loadingLabel && this.keys[" "] && can && this.me.sup) {
 						this.me.vy = 7;
 						this.me.sup = null;
 					}
@@ -102881,7 +103592,8 @@ var GameEngine = class GameEngine {
 				this.me.sup = null;
 				this.me.coy = 0;
 				this.me.ry = Math.atan2(-w.nx, -w.nz);
-				if (lifting) this.me.y += 3.2 * dt;
+				const climbKey = !this.pauseOpen && !this.loadingLabel && !!this.keys[" "];
+				if (lifting || climbKey) this.me.y += 3.2 * dt;
 				if (this.me.clingT > 5.2 && this.cur.hint <= 0) {
 					this.cur.hint = 1;
 					this.psay("Grip slipping!", 650);
@@ -102893,14 +103605,7 @@ var GameEngine = class GameEngine {
 					this.me.vy = -1.5;
 					this.psay("Grip slipped!", 900);
 					sound.uiClick(240);
-				} else if (!this.pauseOpen && this.keys[" "]) {
-					this.me.vy = 9;
-					this.me.vx = w.nx * 6;
-					this.me.vz = w.nz * 6;
-					this.me.cling = null;
-					this.me.regrip = .35;
-					sound.jumpSfx(false);
-				} else if (lifting && this.me.y + 1.4 >= s.top) {
+				} else if ((lifting || climbKey) && this.me.y + 1.4 >= s.top) {
 					this.me.x -= w.nx * .95;
 					this.me.z -= w.nz * .95;
 					this.me.y = s.top;
@@ -102924,7 +103629,7 @@ var GameEngine = class GameEngine {
 				const sp = inWater ? 4.8 : this.me.holding ? lifting ? 3.8 : 4.8 : 7;
 				this.me.vx += (wx * sp - this.me.vx) * k;
 				this.me.vz += (wz * sp - this.me.vz) * k;
-				if (mp.wp === "shark" || mp.wp === "vortex" || mp.wp === "hook" || mp.wp === "bomb" || mp.wp === "ice" || mp.wp === "sniper" || mp.wp === "hole") {
+				if (mp.wp === "shark" || mp.wp === "vortex" || mp.wp === "hook" || mp.wp === "bomb" || mp.wp === "ice" || mp.wp === "sniper" || mp.wp === "paint" || mp.wp === "hole") {
 					let d = this.cam.yaw + Math.PI - this.me.ry;
 					d = Math.atan2(Math.sin(d), Math.cos(d));
 					this.me.ry += d * Math.min(1, dt * 18);
@@ -102938,12 +103643,22 @@ var GameEngine = class GameEngine {
 				this.me.vx *= f;
 				this.me.vz *= f;
 			}
-			if (!this.pauseOpen && this.keys[" "] && free && (this.me.coy > 0 || inWater && this.me.y < wy + .45)) {
-				this.me.vy = inWater ? 11.4 : 9;
-				sound.jumpSfx(inWater);
-				if (inWater) sound.splash();
-				this.me.sup = null;
-				this.me.coy = 0;
+			this.me.swimCd = Math.max(0, (this.me.swimCd || 0) - dt);
+			if (!this.pauseOpen && !this.loadingLabel && this.keys[" "] && free) {
+				if (inWater) {
+					if (wy - this.me.y > .8) this.me.vy = Math.min(3.6, this.me.vy + 16 * dt);
+					else if (this.me.swimCd <= 0) {
+						this.me.vy = 10.2;
+						this.me.swimCd = 1.4;
+						sound.jumpSfx(true);
+						sound.splash();
+					}
+				} else if (this.me.coy > 0) {
+					this.me.vy = 9;
+					sound.jumpSfx(false);
+					this.me.sup = null;
+					this.me.coy = 0;
+				}
 			}
 			const sepPlayersAndCrates = () => {
 				const now = Date.now();
@@ -103037,8 +103752,8 @@ var GameEngine = class GameEngine {
 			w: 17,
 			m: 18
 		};
-		const a = this.me.sharkHold ? 5 : this.me.spec ? 0 : hb ? this.me.atkT > 0 && this.me.ko <= 0 ? atkMap[this.me.atk] || 2 : this.me.hlift ? 11 : this.me.ko > 0 ? 6 : 13 : this.me.ko > 0 ? 6 : this.me.cling ? 12 : this.me.holding ? this.me.atkT > 0 && (this.me.atk === "h" || this.me.atk === "k") ? atkMap[this.me.atk] : lifting ? 10 : 14 : this.me.gw ? 15 : this.me.atkT > 0 ? atkMap[this.me.atk] || 2 : mp.wp && mp.wp !== "cane" && this.keys.f ? 17 : this.me.stun > 0 || this.me.frz ? 5 : this.me.emT > 0 ? this.me.em : moving && on ? 1 : 0;
-		mp.g.visible = !this.me.spec;
+		const a = this.me.sharkHold ? 5 : this.me.spec ? 0 : hb ? this.me.atkT > 0 && this.me.ko <= 0 ? atkMap[this.me.atk] || 2 : this.me.hlift ? 11 : this.me.ko > 0 ? 6 : 13 : this.me.ko > 0 ? 6 : this.me.cling ? 12 : this.me.holding ? this.me.atkT > 0 && (this.me.atk === "h" || this.me.atk === "k") ? atkMap[this.me.atk] : lifting ? 10 : 14 : this.me.gw ? 15 : this.me.atkT > 0 ? atkMap[this.me.atk] || 2 : mp.wp && mp.wp !== "cane" && mp.wp !== "shield" && this.keys.f ? 17 : this.me.stun > 0 || this.me.frz ? 5 : this.me.emT > 0 ? this.me.em : moving && on ? 1 : 0;
+		mp.g.visible = !this.me.spec && !((this.cur.scopeA || 0) > .7);
 		mp.g.position.set(this.me.x, this.me.y, this.me.z);
 		setWeaponOnCharacter(mp.g, mp.wp);
 		mp.g.position.y += animateCharacter(mp.g, a, t, this.me.atkT > 0 ? 1 - this.me.atkT / (this.me.atk === "c" ? .35 : this.me.atk === "m" ? .55 : .3) : .5);
@@ -103080,6 +103795,33 @@ var GameEngine = class GameEngine {
 			Cm.position.set(fx0 + (cx0 - fx0) * ct, this.me.y + 1.9 + (cy0 - this.me.y - 1.9) * ct, fz0 + (cz0 - fz0) * ct);
 		}
 		Cm.lookAt(this.me.x, this.me.y + 1.9 + lk, this.me.z);
+		{
+			const want = mp.wp === "sniper" && this.keys.f && this.me.ko <= 0 && !this.me.spec ? 1 : 0;
+			this.cur.scopeA = (this.cur.scopeA || 0) + (want - (this.cur.scopeA || 0)) * Math.min(1, dt * 9);
+			const sa = this.cur.scopeA;
+			if (Cm.baseFov === void 0 || sa < .002) Cm.baseFov = Cm.fov;
+			if (sa > .002) {
+				const apS = Math.max(-1.3, Math.min(1.3, (.45 - this.cam.pitch) * 1.1));
+				const yF = this.cam.yaw + Math.PI;
+				const ddx = Math.sin(yF) * Math.cos(apS), ddy = Math.sin(apS), ddz = Math.cos(yF) * Math.cos(apS);
+				const hx = this.me.x, hy = this.me.y + 1.9, hz = this.me.z;
+				Cm.position.set(Cm.position.x + (hx - ddx * 2.4 - Cm.position.x) * sa, Cm.position.y + (hy - ddy * 2.4 - Cm.position.y) * sa, Cm.position.z + (hz - ddz * 2.4 - Cm.position.z) * sa);
+				Cm.lookAt(hx + (ddx * 20) * sa, hy + lk * (1 - sa) + ddy * 20 * sa, hz + ddz * 20 * sa);
+			}
+			const nf = Cm.baseFov * (1 - .68 * sa);
+			if (Math.abs(Cm.fov - nf) > .01) {
+				Cm.fov = nf;
+				Cm.updateProjectionMatrix();
+			}
+			if (!this.scopeEl && typeof document !== "undefined") {
+				const el = document.createElement("div");
+				el.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:20;opacity:0;background:radial-gradient(circle at center,transparent 0,transparent 24%,rgba(0,0,0,.82) 46%)";
+				el.innerHTML = '<div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,60,60,.8)"></div><div style="position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(255,60,60,.8)"></div><div style="position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;border:1px solid #ff3c3c"></div>';
+				document.body.appendChild(el);
+				this.scopeEl = el;
+			}
+			if (this.scopeEl) this.scopeEl.style.opacity = String((this.locals?.length || 1) <= 1 ? Math.min(1, sa * 1.2) : 0);
+		}
 	}
 	layout(n) {
 		const W = window.innerWidth;
@@ -103711,8 +104453,7 @@ var GameEngine = class GameEngine {
 			else if (action === "K" && pressed) this.act("k");
 			else if (action === "J") this.keys[" "] = pressed;
 			else if (action === "D" && pressed) {
-				this.me.em = 3;
-				this.me.emT = 3;
+				this.doDance();
 			} else if (action === "M" && pressed) this.toggleMute();
 			else if (action === "S") this.keys.shift = pressed;
 			else if (action === "F") this.keys.f = pressed;
@@ -103793,6 +104534,10 @@ var BIND_ACTIONS = [
 		label: "Fire Weapon"
 	},
 	{
+		key: "pickup",
+		label: "Pick Up Weapon"
+	},
+	{
 		key: "dance",
 		label: "Dance Emote"
 	}
@@ -103806,7 +104551,8 @@ var PAD_KEYS = [
 	"rb",
 	"lt",
 	"rt",
-	"ls"
+	"ls",
+	"rs"
 ];
 var formatKbKey = (k) => k === " " ? "SPACE" : k === "shift" ? "SHIFT" : k.length === 1 ? k.toUpperCase() : k.toUpperCase();
 function App() {
@@ -103828,6 +104574,7 @@ function App() {
 	const [authPass2, setAuthPass2] = (0, import_react.useState)("");
 	const [authErr, setAuthErr] = (0, import_react.useState)("");
 	const [mapPickerOpen, setMapPickerOpen] = (0, import_react.useState)(false);
+	const [rulesOpen, setRulesOpen] = (0, import_react.useState)(false);
 	const [listeningBind, setListeningBind] = (0, import_react.useState)(null);
 	const [initError, setInitError] = (0, import_react.useState)(null);
 	const [dlStatus, setDlStatus] = (0, import_react.useState)("idle");
@@ -104159,13 +104906,7 @@ function App() {
 									]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									className: "flex items-center gap-2",
-									children: [!isLocalFile && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-										type: "button",
-										onClick: () => void handleDownloadSingleHtml(),
-										className: "px-2.5 py-1 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-[11px] transition cursor-pointer",
-										title: "Download standalone single-file index.html to play offline in Chrome",
-										children: dlStatus === "busy" ? "Building Download…" : dlStatus === "done" ? "✓ Saved index.html" : dlStatus === "err" ? "Run npm run build first" : "⬇ Download index.html"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 										className: snap.padConnected ? "text-emerald-300 font-semibold" : "text-slate-400",
 										children: snap.padConnected ? `Controller Ready (${snap.padCount})` : "Xbox Controller / Keyboard"
 									})]
@@ -104964,6 +105705,48 @@ function App() {
 								]
 							});
 						})(),
+						snap.phase === "lobby" && snap.players.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "fixed left-3 top-20 z-30 w-60 bg-slate-950/85 border border-white/15 rounded-xl p-2 text-xs",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "font-bold text-amber-200 px-1 pb-1",
+								children: "ROOM · " + snap.players.length + "/8"
+							}), ...Array.from({ length: 8 }, (_, i) => {
+								const pl = snap.players[i];
+								return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "flex items-center justify-between px-2 py-1 mb-1 rounded-lg " + (pl ? "bg-slate-800" : "bg-slate-900/60 text-slate-500"),
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: pl ? (pl.bot ? "🤖 " : "") + pl.name + (pl.head && CNAME[pl.head] ? " · " + CNAME[pl.head] : "") : "Slot " + (i + 1) + " · Empty" }), pl && pl.bot && snap.isHost && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+										onClick: () => eng?.kickBot(pl.id),
+										className: "text-rose-300 cursor-pointer",
+										children: "✕"
+									})]
+								}, i);
+							})]
+						}),
+						snap.phase === "lobby" && snap.isHost && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "fixed right-3 top-20 z-30",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								onClick: () => setRulesOpen(!rulesOpen),
+								className: "px-3 py-1.5 rounded-lg bg-amber-300 text-slate-950 font-bold text-xs cursor-pointer",
+								children: rulesOpen ? "Close Rules" : "⚙ Rules (Maps & Weapons)"
+							}), rulesOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "mt-2 w-72 max-h-[70vh] overflow-y-auto bg-slate-950/90 border border-white/15 rounded-xl p-3 text-xs space-y-1",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "font-bold text-amber-200",
+									children: "MAPS · tap to turn off/on"
+								}), ...MAPK.filter((m) => m !== "arena13" && m !== "arena14").map((m) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									onClick: () => eng?.toggleMapOff(m),
+									className: "block w-full text-left px-2 py-1 rounded cursor-pointer " + (snap.offMaps.includes(m) ? "bg-rose-900/60 line-through text-slate-400" : "bg-emerald-800/60"),
+									children: (snap.offMaps.includes(m) ? "✕ " : "✓ ") + MAPN[m]
+								}, m)), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "font-bold text-amber-200 pt-2",
+									children: "WEAPONS · tap to turn off/on"
+								}), ...WEPL.map((k) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+									onClick: () => eng?.toggleWepOff(k),
+									className: "block w-full text-left px-2 py-1 rounded cursor-pointer " + (snap.offWeps.includes(k) ? "bg-rose-900/60 line-through text-slate-400" : "bg-emerald-800/60"),
+									children: (snap.offWeps.includes(k) ? "✕ " : "✓ ") + (WI[k] || "") + " " + WN[k]
+								}, k))]
+							})]
+						}),
 						snap.phase === "lobby" && snap.isHost && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "mt-2 flex flex-wrap gap-1.5",
 							children: [
